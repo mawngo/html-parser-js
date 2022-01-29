@@ -1,6 +1,6 @@
-import { wrapArray } from "./utils";
+import { wrapArray } from "./common";
+import { ValueSelector } from "../../schema/schema";
 import { ValueParser } from "./string";
-import { ValueSelector } from "../schema/schema";
 
 export interface BooleanParseOptions {
   truthy?: string | string[];
@@ -38,7 +38,7 @@ export class BooleanValueParser implements ValueParser<boolean, BooleanParseOpti
     return def;
   }
 
-  isSelectorMatch(selector: any): boolean {
+  match(selector: any): boolean {
     return selector?.boolean === true;
   }
 }

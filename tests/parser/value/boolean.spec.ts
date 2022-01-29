@@ -1,4 +1,4 @@
-import { BooleanValueParser } from "../../src/parser/boolean";
+import { BooleanValueParser } from "../../../src/parser/value/boolean";
 
 describe("parseBoolean", () => {
   const parser = new BooleanValueParser();
@@ -64,8 +64,8 @@ describe("parseBoolean", () => {
   });
 
   it("should match correct selector", () => {
-    expect(parser.isSelectorMatch({})).toEqual(false);
-    expect(parser.isSelectorMatch({ boolean: false })).toEqual(false);
-    expect(parser.isSelectorMatch({ boolean: true })).toEqual(true);
+    expect(parser.match({})).toEqual(false);
+    expect(parser.match({ boolean: false })).toEqual(false);
+    expect(parser.match({ boolean: true })).toEqual(true);
   });
 });

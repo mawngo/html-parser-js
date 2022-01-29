@@ -1,4 +1,4 @@
-import { DefaultValueParser, StringValueParser } from "../../src/parser/string";
+import { DefaultValueParser, StringValueParser } from "../../../src/parser/value/string";
 
 describe("parseString", () => {
   const parser = new StringValueParser();
@@ -33,15 +33,15 @@ describe("parseString", () => {
   });
 
   it("should match correct selector", () => {
-    expect(parser.isSelectorMatch({})).toEqual(false);
-    expect(parser.isSelectorMatch({ string: false })).toEqual(false);
-    expect(parser.isSelectorMatch({ string: true })).toEqual(true);
+    expect(parser.match({})).toEqual(false);
+    expect(parser.match({ string: false })).toEqual(false);
+    expect(parser.match({ string: true })).toEqual(true);
   });
 
-  it("default parser should match correct selector", () => {
+  it("default value should match correct selector", () => {
     const parser = new DefaultValueParser();
-    expect(parser.isSelectorMatch({})).toEqual(true);
-    expect(parser.isSelectorMatch({ string: false })).toEqual(true);
-    expect(parser.isSelectorMatch({ string: true })).toEqual(true);
+    expect(parser.match({})).toEqual(true);
+    expect(parser.match({ string: false })).toEqual(true);
+    expect(parser.match({ string: true })).toEqual(true);
   });
 });

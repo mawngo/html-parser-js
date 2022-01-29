@@ -1,4 +1,4 @@
-import { wrapArray } from "../../src/parser/utils";
+import { wrapArray } from "../../../src/parser/value/common";
 
 describe("wrapArray", () => {
   it("should return empty with null or undefined", () => {

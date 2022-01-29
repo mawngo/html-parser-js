@@ -1,5 +1,5 @@
+import { ValueSelector } from "../../schema/schema";
 import { ValueParser } from "./string";
-import { ValueSelector } from "../schema/schema";
 
 export interface NumberParseOptions {
   int?: boolean;
@@ -26,7 +26,7 @@ export class NumberValueParser implements ValueParser<number, NumberParseOptions
     return def;
   }
 
-  isSelectorMatch(selector: any): boolean {
+  match(selector: any): boolean {
     return selector?.number === true;
   }
 }

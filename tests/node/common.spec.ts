@@ -1,0 +1,116 @@
+import { parseSelectorString } from "../../src/parser/common";
+
+describe("parseSelectorString", () => {
+  const selectors = [
+    ".intro",
+    "#firstname",
+    "*",
+    "p",
+    "div, p",
+    "div p",
+    "div > p",
+    "div + p",
+    "p ~ ul",
+    "[target]",
+    "[target=_blank]",
+    "[title~=flower]",
+    "[lang|=en]",
+    "a[href^=\"https\"]",
+    "a[href$=\".pdf\"]",
+    "a[href*=\"w3schools\"]",
+    "a:active",
+    "p::after",
+    "p::before",
+    "input:checked",
+    "input:disabled",
+    "p:empty",
+    "input:enabled",
+    "p:first-child",
+    "p::first-letter",
+    "p::first-line",
+    "p:first-of-type",
+    "input:focus",
+    "a:hover",
+    "input:in-range",
+    "input:invalid",
+    "p:lang(it)",
+    "p:last-child",
+    "p:last-of-type",
+    "a:link",
+    ":not(p)",
+    "p:nth-child(2)",
+    "p:nth-last-child(2)",
+    "p:nth-last-of-type(2)",
+    "p:nth-of-type(2)",
+    "p:only-of-type",
+    "p:only-child",
+    "input:optional",
+    "input:out-of-range",
+    "input:read-only",
+    "input:read-write",
+    "input:required",
+    ":root",
+    "::selection",
+    "#news:target",
+    "input:valid",
+    "a:visited"
+  ];
+
+  it("should extract single element selectors", () => {
+    for (const selector of selectors) {
+      const parsed = parseSelectorString(selector);
+      expect(selector).toEqual(parsed.selector);
+      expect(undefined).toEqual(parsed.attribute);
+      expect([]).toEqual(parsed.transforms);
+    }
+  });
+
+  it("should extract any combination of element and attribute selectors", () => {
+    for (const selector of selectors) {
+      const selectorWithAttr = selector + "@ href";
+      const parsed = parseSelectorString(selectorWithAttr);
+      expect(selector).toEqual(parsed.selector);
+      expect("href").toEqual(parsed.attribute);
+      expect([]).toEqual(parsed.transforms);
+    }
+  });
+
+  it("should extract any combination of element and attribute selectors with spaces and hypens", () => {
+    for (const selector of selectors) {
+      const selectorWithAttr = selector + " @ data-item";
+      const parsed = parseSelectorString(selectorWithAttr);
+      expect(selector).toEqual(parsed.selector);
+      expect("data-item").toEqual(parsed.attribute);
+      expect([]).toEqual(parsed.transforms);
+    }
+  });
+
+  it("should support a single attribute", () => {
+    expect("href").toEqual(parseSelectorString("@ href").attribute);
+    expect("href").toEqual(parseSelectorString("@href").attribute);
+  });
+
+  it("should support transforms", () => {
+    const selector = "a[href][class] @ html | filter1 | filter2";
+    const parsed = parseSelectorString(selector);
+    expect("a[href][class]").toEqual(parsed.selector);
+    expect("html").toEqual(parsed.attribute);
+    expect(["filter1", "filter2"]).toEqual(parsed.transforms);
+  });
+
+  it("should support transforms with arguments", () => {
+    const selector = "a[href][class] @ html | filter1: \"%Y %M %d\" | filter2: matt 25";
+    const parsed = parseSelectorString(selector);
+    expect("a[href][class]").toEqual(parsed.selector);
+    expect("html").toEqual(parsed.attribute);
+    expect(["filter1: \"%Y %M %d\"", "filter2: matt 25"]).toEqual(parsed.transforms);
+  });
+
+  it("should support everything with no spaces", () => {
+    const selector = "a@href|href|uppercase";
+    const parsed = parseSelectorString(selector);
+    expect("a").toEqual(parsed.selector);
+    expect("href").toEqual(parsed.attribute);
+    expect(["href", "uppercase"]).toEqual(parsed.transforms);
+  });
+});

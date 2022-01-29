@@ -1,9 +1,9 @@
-import { ValueSelector } from "../schema/schema";
+import { ValueSelector } from "../../schema/schema";
 
 export interface ValueParser<T, O> {
   parse(value: any, options?: O): T | Promise<T | null> | null;
 
-  isSelectorMatch(selector: any): boolean;
+  match(selector: any): boolean;
 }
 
 export interface StringParseOptions {
@@ -30,14 +30,14 @@ export class StringValueParser implements ValueParser<string, StringParseOptions
     return def;
   }
 
-  isSelectorMatch(selector: any): boolean {
+  match(selector: any): boolean {
     return selector.string === true;
   }
 }
 
 export class DefaultValueParser extends StringValueParser {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  override isSelectorMatch(_selector: any): boolean {
+  override match(_selector: any): boolean {
     // always match
     return true;
   }
