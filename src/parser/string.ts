@@ -1,3 +1,11 @@
+import { ValueSelector } from "../schema/schema";
+
+export interface ValueParser<T, O> {
+  parse(value: any, options?: O): T | Promise<T | null> | null;
+
+  isSelectorMatch(selector: any): boolean;
+}
+
 export interface StringParseOptions {
   default?: string | null;
   defaultIfEmpty?: string | null;
@@ -5,16 +13,34 @@ export interface StringParseOptions {
   defaultIfNoMatch?: string | null;
 }
 
-export function parseString(value: any, options: StringParseOptions = {}): string | null {
-  const def = options.default ?? null;
-  if (typeof value === "string") {
-    if (options.defaultIfEmpty && value === "") return options.defaultIfEmpty;
-    if (value == null) return def;
-    return matchIfRequired(value, options);
+export interface StringSelector extends ValueSelector, StringParseOptions {
+  string: true;
+}
+
+export class StringValueParser implements ValueParser<string, StringParseOptions> {
+  parse(value: any, options: StringParseOptions = {}): string | null {
+    const def = options.default ?? null;
+    if (typeof value === "string") {
+      if (options.defaultIfEmpty && value === "") return options.defaultIfEmpty;
+      if (value == null) return def;
+      return matchIfRequired(value, options);
+    }
+
+    if (typeof value === "number" || typeof value === "boolean") return matchIfRequired(value.toString(), options);
+    return def;
   }
 
-  if (typeof value === "number" || typeof value === "boolean") return matchIfRequired(value.toString(), options);
-  return def;
+  isSelectorMatch(selector: any): boolean {
+    return selector.string === true;
+  }
+}
+
+export class DefaultValueParser extends StringValueParser {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  override isSelectorMatch(_selector: any): boolean {
+    // always match
+    return true;
+  }
 }
 
 function matchIfRequired(value: string | null, options?: StringParseOptions): string | null {

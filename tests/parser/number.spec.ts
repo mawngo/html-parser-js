@@ -1,6 +1,9 @@
-import { parseNumber } from "../../src/parser/number";
+import { NumberValueParser } from "../../src/parser/number";
 
 describe("parseNumber", () => {
+  const parser = new NumberValueParser();
+  const parseNumber = parser.parse;
+
   it("should parse boolean", () => {
     expect(parseNumber(true)).toEqual(1);
     expect(parseNumber(false)).toEqual(0);
@@ -35,5 +38,11 @@ describe("parseNumber", () => {
     expect(parseNumber("10.6", { int: true, roundMode: "floor" })).toEqual(10);
     expect(parseNumber("10.1", { int: true, roundMode: "ceil" })).toEqual(11);
     expect(parseNumber("10.6", { int: true })).toEqual(11);
+  });
+
+  it("should match correct selector", () => {
+    expect(parser.isSelectorMatch({})).toEqual(false);
+    expect(parser.isSelectorMatch({ number: false })).toEqual(false);
+    expect(parser.isSelectorMatch({ number: true })).toEqual(true);
   });
 });

@@ -1,4 +1,6 @@
 import { wrapArray } from "./utils";
+import { ValueParser } from "./string";
+import { ValueSelector } from "../schema/schema";
 
 export interface BooleanParseOptions {
   truthy?: string | string[];
@@ -6,27 +8,37 @@ export interface BooleanParseOptions {
   default?: boolean | null;
 }
 
-export function parseBoolean(value: any, options: BooleanParseOptions = {}): boolean | null {
-  const def = options.default ?? null;
+export interface BooleanSelector extends ValueSelector, BooleanParseOptions {
+  boolean: true;
+}
 
-  if (typeof value === "string") {
-    options.falsy = wrapArray<string>(options.falsy);
-    options.truthy = wrapArray<string>(options.truthy);
+export class BooleanValueParser implements ValueParser<boolean, BooleanParseOptions> {
+  parse(value: any, options: BooleanParseOptions = {}): boolean | null {
+    const def = options.default ?? null;
 
-    if (!options.falsy.length && !options.truthy.length) return value !== "";
-    if (!options.falsy.length) return !!options.truthy?.includes(value);
-    if (!options.truthy.length) return !options.falsy?.includes(value);
+    if (typeof value === "string") {
+      options.falsy = wrapArray<string>(options.falsy);
+      options.truthy = wrapArray<string>(options.truthy);
 
-    const isTrue = options.truthy.includes(value);
-    if (isTrue) return true;
+      if (!options.falsy.length && !options.truthy.length) return value !== "";
+      if (!options.falsy.length) return !!options.truthy?.includes(value);
+      if (!options.truthy.length) return !options.falsy?.includes(value);
 
-    const isFalse = options.falsy.includes(value);
-    if (isFalse) return false;
+      const isTrue = options.truthy.includes(value);
+      if (isTrue) return true;
 
+      const isFalse = options.falsy.includes(value);
+      if (isFalse) return false;
+
+      return def;
+    }
+
+    if (typeof value === "number") return value !== 0;
+    if (typeof value === "boolean") return value;
     return def;
   }
 
-  if (typeof value === "number") return value !== 0;
-  if (typeof value === "boolean") return value;
-  return def;
+  isSelectorMatch(selector: any): boolean {
+    return selector?.boolean === true;
+  }
 }
