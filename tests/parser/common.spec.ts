@@ -1,4 +1,4 @@
-import { parseSelectorString, wrapArray } from "../../src/parser/common";
+import { parseSelectorString, wrapArray } from "../../src/parser/common.js";
 
 describe("parseSelectorString", () => {
   const selectors = [

@@ -1,4 +1,4 @@
-import { DefaultValueParserEngine, parseString, StringParserEngine } from "../../../src/parser/value/string";
+import { DefaultValueParserEngine, parseString, StringParserEngine } from "../../../src/parser/value/string.js";
 
 describe("parseString", () => {
 

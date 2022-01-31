@@ -1,4 +1,4 @@
-import { ValueParserEngine, ValueSelector } from "./base";
+import { ValueParserEngine, ValueSelector } from "./base.js";
 
 export interface NumberParseOptions {
   int?: boolean;

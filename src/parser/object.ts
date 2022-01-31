@@ -1,6 +1,6 @@
-import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "./node";
-import { unwrapSelector } from "./common";
-import { SimpleSelector, ValueSelector } from "./value/base";
+import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "./node.js";
+import { unwrapSelector } from "./common.js";
+import { SimpleSelector, ValueSelector } from "./value/base.js";
 
 export type Selector = ObjectSelector | ValueSelector | SimpleSelector;
 export type MapSelector = { [key: string]: Selector };

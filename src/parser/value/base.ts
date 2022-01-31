@@ -1,5 +1,5 @@
-import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "../node";
-import { parseSelectorString, wrapArray } from "../common";
+import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "../node.js";
+import { parseSelectorString, wrapArray } from "../common.js";
 import { parse } from "@lanatools/pipe-parser";
 
 export interface ValueSelector extends SelectorOptions {

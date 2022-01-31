@@ -1,5 +1,5 @@
-import { ValueParserEngine, ValueSelector } from "./base";
-import { wrapArray } from "../common";
+import { ValueParserEngine, ValueSelector } from "./base.js";
+import { wrapArray } from "../common.js";
 
 
 export interface BooleanParseOptions {

@@ -1,5 +1,5 @@
-import { ObjectSelector, Selector } from "./object";
-import { ValueSelector } from "./value/base";
+import { ObjectSelector, Selector } from "./object.js";
+import { ValueSelector } from "./value/base.js";
 
 export function wrapArray<T>(value?: T | T[] | null): T[] {
   if (Array.isArray(value)) return value;
