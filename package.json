@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "start": "tsc --project tsconfig.build.json && node dist/index.js",
+    "dev": "ts-node src/index.ts",
     "dist": "tsc --project tsconfig.build.json",
     "lint": "eslint --fix --ext .js,.ts .",
     "test": "jest"
@@ -34,6 +35,7 @@
     "eslint": "^8.7.0",
     "jest": "^27.4.7",
     "ts-jest": "^27.1.3",
+    "ts-node": "^10.4.0",
     "typescript": "^4.4.3"
   },
   "jest": {
