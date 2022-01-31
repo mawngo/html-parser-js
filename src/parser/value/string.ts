@@ -1,10 +1,4 @@
-import { ValueSelector } from "../../schema/schema";
-
-export interface ValueParser<T, O> {
-  parse(value: any, options?: O): T | Promise<T | null> | null;
-
-  match(selector: any): boolean;
-}
+import { ValueParserEngine, ValueSelector } from "./base";
 
 export interface StringParseOptions {
   default?: string | null;
@@ -17,30 +11,32 @@ export interface StringSelector extends ValueSelector, StringParseOptions {
   string: true;
 }
 
-export class StringValueParser implements ValueParser<string, StringParseOptions> {
-  parse(value: any, options: StringParseOptions = {}): string | null {
-    const def = options.default ?? null;
-    if (typeof value === "string") {
-      if (options.defaultIfEmpty && value === "") return options.defaultIfEmpty;
-      if (value == null) return def;
-      return matchIfRequired(value, options);
-    }
-
-    if (typeof value === "number" || typeof value === "boolean") return matchIfRequired(value.toString(), options);
-    return def;
+export class StringParserEngine extends ValueParserEngine<StringSelector> {
+  match(selector: any): boolean {
+    return this.isSimpleSelector(selector) && selector.string === true;
   }
 
-  match(selector: any): boolean {
-    return selector.string === true;
+  protected parseValue(value: any, context: StringSelector): Promise<string | null> {
+    return Promise.resolve(parseString(value, context));
   }
 }
 
-export class DefaultValueParser extends StringValueParser {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  override match(_selector: any): boolean {
-    // always match
-    return true;
+export class DefaultValueParserEngine extends StringParserEngine {
+  override match(selector: any): boolean {
+    return this.isSimpleSelector(selector) && true;
   }
+}
+
+export function parseString(value: any, options: StringParseOptions = {}): string | null {
+  const def = options.default ?? null;
+  if (typeof value === "string") {
+    if (options.defaultIfEmpty && value === "") return options.defaultIfEmpty;
+    if (value == null) return def;
+    return matchIfRequired(value, options);
+  }
+
+  if (typeof value === "number" || typeof value === "boolean") return matchIfRequired(value.toString(), options);
+  return def;
 }
 
 function matchIfRequired(value: string | null, options?: StringParseOptions): string | null {

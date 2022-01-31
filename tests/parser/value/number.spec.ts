@@ -1,9 +1,6 @@
-import { NumberValueParser } from "../../../src/parser/value/number";
+import { NumberParserEngine, parseNumber } from "../../../src/parser/value/number";
 
 describe("parseNumber", () => {
-  const parser = new NumberValueParser();
-  const parseNumber = parser.parse;
-
   it("should parse boolean", () => {
     expect(parseNumber(true)).toEqual(1);
     expect(parseNumber(false)).toEqual(0);
@@ -41,8 +38,9 @@ describe("parseNumber", () => {
   });
 
   it("should match correct selector", () => {
-    expect(parser.match({})).toEqual(false);
-    expect(parser.match({ number: false })).toEqual(false);
-    expect(parser.match({ number: true })).toEqual(true);
+    const parser = new NumberParserEngine();
+    expect(parser.match({ selector: "hello" })).toEqual(false);
+    expect(parser.match({ selector: "hello", number: false })).toEqual(false);
+    expect(parser.match({ selector: "hello", number: true })).toEqual(true);
   });
 });

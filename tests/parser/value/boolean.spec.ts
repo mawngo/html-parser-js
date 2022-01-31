@@ -1,8 +1,6 @@
-import { BooleanValueParser } from "../../../src/parser/value/boolean";
+import { BooleanParserEngine, parseBoolean } from "../../../src/parser/value/boolean";
 
 describe("parseBoolean", () => {
-  const parser = new BooleanValueParser();
-  const parseBoolean = parser.parse;
 
   it("should parse number", () => {
     const zero = parseBoolean(0);
@@ -64,8 +62,9 @@ describe("parseBoolean", () => {
   });
 
   it("should match correct selector", () => {
-    expect(parser.match({})).toEqual(false);
-    expect(parser.match({ boolean: false })).toEqual(false);
-    expect(parser.match({ boolean: true })).toEqual(true);
+    const parser = new BooleanParserEngine();
+    expect(parser.match({ selector: "hello" })).toEqual(false);
+    expect(parser.match({ selector: "hello", boolean: false })).toEqual(false);
+    expect(parser.match({ selector: "hello", boolean: true })).toEqual(true);
   });
 });

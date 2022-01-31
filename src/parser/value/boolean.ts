@@ -1,6 +1,6 @@
-import { wrapArray } from "./common";
-import { ValueSelector } from "../../schema/schema";
-import { ValueParser } from "./string";
+import { ValueParserEngine, ValueSelector } from "./base";
+import { wrapArray } from "../common";
+
 
 export interface BooleanParseOptions {
   truthy?: string | string[];
@@ -12,33 +12,37 @@ export interface BooleanSelector extends ValueSelector, BooleanParseOptions {
   boolean: true;
 }
 
-export class BooleanValueParser implements ValueParser<boolean, BooleanParseOptions> {
-  parse(value: any, options: BooleanParseOptions = {}): boolean | null {
-    const def = options.default ?? null;
+export class BooleanParserEngine extends ValueParserEngine<BooleanSelector> {
+  match(selector: any): boolean {
+    return this.isSimpleSelector(selector) && selector?.boolean === true;
+  }
 
-    if (typeof value === "string") {
-      options.falsy = wrapArray<string>(options.falsy);
-      options.truthy = wrapArray<string>(options.truthy);
+  protected parseValue(value: any, context: BooleanSelector): Promise<boolean | null> {
+    return Promise.resolve(parseBoolean(value, context));
+  }
+}
 
-      if (!options.falsy.length && !options.truthy.length) return value !== "";
-      if (!options.falsy.length) return !!options.truthy?.includes(value);
-      if (!options.truthy.length) return !options.falsy?.includes(value);
+export function parseBoolean(value: any, options: BooleanParseOptions = {}): boolean | null {
+  const def = options.default ?? null;
 
-      const isTrue = options.truthy.includes(value);
-      if (isTrue) return true;
+  if (typeof value === "string") {
+    options.falsy = wrapArray<string>(options.falsy);
+    options.truthy = wrapArray<string>(options.truthy);
 
-      const isFalse = options.falsy.includes(value);
-      if (isFalse) return false;
+    if (!options.falsy.length && !options.truthy.length) return value !== "";
+    if (!options.falsy.length) return !!options.truthy?.includes(value);
+    if (!options.truthy.length) return !options.falsy?.includes(value);
 
-      return def;
-    }
+    const isTrue = options.truthy.includes(value);
+    if (isTrue) return true;
 
-    if (typeof value === "number") return value !== 0;
-    if (typeof value === "boolean") return value;
+    const isFalse = options.falsy.includes(value);
+    if (isFalse) return false;
+
     return def;
   }
 
-  match(selector: any): boolean {
-    return selector?.boolean === true;
-  }
+  if (typeof value === "number") return value !== 0;
+  if (typeof value === "boolean") return value;
+  return def;
 }

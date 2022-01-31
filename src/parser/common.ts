@@ -1,3 +1,11 @@
+import { ObjectSelector, Selector } from "./object";
+import { ValueSelector } from "./value/base";
+
+export function wrapArray<T>(value?: T | T[] | null): T[] {
+  if (Array.isArray(value)) return value;
+  return value != null ? [value] : [];
+}
+
 export function parseSelectorString(selector: string): { selector?: string, attribute?: string, transforms: string[] } {
   const transforms = selector.split(/\s*\|(?!=)\s*/);
   const selectorsAndAttribute = transforms.shift();
@@ -11,3 +19,11 @@ export function parseSelectorString(selector: string): { selector?: string, attr
   };
 }
 
+export function unwrapSelector(selector: Selector): ObjectSelector | ValueSelector {
+  if (typeof selector === "string" || Array.isArray(selector)) {
+    return {
+      selector
+    };
+  }
+  return selector as ObjectSelector | ValueSelector;
+}

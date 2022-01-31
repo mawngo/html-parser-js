@@ -1,8 +1,6 @@
-import { DefaultValueParser, StringValueParser } from "../../../src/parser/value/string";
+import { DefaultValueParserEngine, parseString, StringParserEngine } from "../../../src/parser/value/string";
 
 describe("parseString", () => {
-  const parser = new StringValueParser();
-  const parseString = parser.parse;
 
   it("should parse non-simple type as default", () => {
     expect(parseString({})).toEqual(null);
@@ -33,15 +31,20 @@ describe("parseString", () => {
   });
 
   it("should match correct selector", () => {
+    const parser = new StringParserEngine();
     expect(parser.match({})).toEqual(false);
-    expect(parser.match({ string: false })).toEqual(false);
-    expect(parser.match({ string: true })).toEqual(true);
+    expect(parser.match({ selector: "hello", string: false })).toEqual(false);
+    expect(parser.match({ selector: "hello", string: true })).toEqual(true);
+    expect(parser.match({ selector: ["hello"], string: false })).toEqual(false);
+    expect(parser.match({ selector: ["hello"], string: true })).toEqual(true);
+    expect(parser.match({ selector: {}, string: true })).toEqual(false);
   });
 
   it("default value should match correct selector", () => {
-    const parser = new DefaultValueParser();
-    expect(parser.match({})).toEqual(true);
-    expect(parser.match({ string: false })).toEqual(true);
-    expect(parser.match({ string: true })).toEqual(true);
+    const parser = new DefaultValueParserEngine();
+    expect(parser.match({ selector: "hello" })).toEqual(true);
+    expect(parser.match({ selector: "hello", string: false })).toEqual(true);
+    expect(parser.match({ selector: "hello", string: true })).toEqual(true);
+    expect(parser.match({ selector: {} })).toEqual(false);
   });
 });
