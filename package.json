@@ -47,5 +47,8 @@
   "volta": {
     "node": "16.13.2",
     "npm": "8.3.1"
+  },
+  "dependencies": {
+    "@lanatools/pipe-parser": "^1.2.0"
   }
 }

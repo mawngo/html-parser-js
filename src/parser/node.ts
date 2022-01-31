@@ -47,7 +47,7 @@ export abstract class ParserEngine<P extends SelectorOptions = SelectorOptions> 
   abstract match(selector: any): boolean;
 }
 
-export type TransformFunction = <T, V>(value: V) => T | Promise<T>;
+export type TransformFunction = (value: any, ...args: any[]) => any;
 
 export interface SelectorOptions {
   scope?: string | string[];

@@ -43,12 +43,13 @@ export class ObjectParserEngine extends ParserEngine<ObjectSelector> implements 
 
 
   private parseSelectorValue(node: Node, value: Selector, context: ObjectSelector): Promise<any | null> {
-    const selector = unwrapSelector(value);
+    const selector = { ...unwrapSelector(value) };
     if (context.trim != null && selector.trim == null) {
       selector.trim = context.trim;
     }
-    if (context.transforms && context.transforms.length && !selector.transforms?.length) {
-      selector.transforms = [...context.transforms];
+    if (context.transforms && context.transforms.length) {
+      selector.transforms = selector.transforms || [];
+      selector.transforms = [...selector.transforms, ...context.transforms];
     }
     for (const engine of this.options.engines) {
       if (!engine.match(selector)) continue;
