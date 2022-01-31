@@ -1,4 +1,4 @@
-import { Node, ParserEngine, SelectorOptions } from "../node";
+import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "../node";
 import { parseSelectorString, wrapArray } from "../common";
 
 export interface ValueSelector extends SelectorOptions {
@@ -7,7 +7,19 @@ export interface ValueSelector extends SelectorOptions {
 
 export type SimpleSelector = string | string[];
 
-export abstract class ValueParserEngine<P extends ValueSelector> extends ParserEngine<P> {
+export interface ValueParserEngineConfig {
+  transforms: {
+    [key: string]: TransformFunction
+  };
+}
+
+export abstract class ValueParserEngine<P extends ValueSelector> extends ParserEngine<P> implements Configurable<ValueParserEngineConfig> {
+  protected options: ValueParserEngineConfig = { transforms: {} };
+
+  config(options: Partial<ValueParserEngineConfig>) {
+    this.options = { ...this.options, ...options };
+  }
+
   parseNode<T>(node: Node, context: P): Promise<T | null> {
     const isArray = Array.isArray(context.selector);
     const rawSelector = isArray ? context.selector[0] : context.selector as string;

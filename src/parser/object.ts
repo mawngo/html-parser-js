@@ -1,4 +1,4 @@
-import { Node, ParserEngine, SelectorOptions, TransformFunction } from "./node";
+import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "./node";
 import { unwrapSelector } from "./common";
 import { SimpleSelector, ValueSelector } from "./value/base";
 
@@ -10,17 +10,20 @@ export interface ObjectSelector extends SelectorOptions {
   objTransforms?: TransformFunction[];
 }
 
-export interface ObjectNodeParserOptions {
-  engines: ParserEngine<any>[];
+export interface ObjectParserEngineOptions {
+  engines: ParserEngine[];
+  objTransforms: {
+    [key: string]: TransformFunction
+  };
 }
 
 // Parse object values
-export class ObjectParserEngine extends ParserEngine<ObjectSelector> {
-  private readonly engines: ParserEngine<any>[];
+export class ObjectParserEngine extends ParserEngine<ObjectSelector> implements Configurable<ObjectParserEngineOptions> {
+  private options: ObjectParserEngineOptions = { engines: [], objTransforms: {} };
 
-  constructor(options: ObjectNodeParserOptions) {
-    super();
-    this.engines = [...options.engines, this];
+  config(options: Partial<ObjectParserEngineOptions>) {
+    // swallow copy, so the ref of engines arrays is kept
+    this.options = { ...this.options, ...options };
   }
 
   match(selector: any): boolean {
@@ -47,7 +50,7 @@ export class ObjectParserEngine extends ParserEngine<ObjectSelector> {
     if (context.transforms && context.transforms.length && !selector.transforms?.length) {
       selector.transforms = [...context.transforms];
     }
-    for (const engine of this.engines) {
+    for (const engine of this.options.engines) {
       if (!engine.match(selector)) continue;
       return engine.parse(node, selector);
     }

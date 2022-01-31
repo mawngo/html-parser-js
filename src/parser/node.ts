@@ -14,8 +14,14 @@ export interface NodeFactory {
   loadHtml(html: string): Node;
 }
 
-export abstract class ParserEngine<P extends SelectorOptions> {
-  public parse<T>(node: Node | null, context: P): Promise<T | null> {
+export interface Configurable<C = any> {
+  config(options: C | Partial<C>);
+}
+
+export const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
+
+export abstract class ParserEngine<P extends SelectorOptions = SelectorOptions> {
+  parse<T>(node: Node | null, context: P): Promise<T | null> {
     if (node === null) return Promise.resolve(null);
 
     if (!context.scope) return this.parseNode<T>(node, context);
