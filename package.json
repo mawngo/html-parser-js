@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "Parse html to json object using predefined json schema.",
   "main": "dist/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
+  "type": "commonjs",
   "private": true,
   "scripts": {
-    "start": "tsc --project tsconfig.build.json && node dist/index.js",
+    "start": "tsc --p tsconfig.build.json && node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "dist": "tsc --project tsconfig.build.json",
+    "dist": "tsc -p tsconfig.build.json && tsc -p tsconfig.build-esm.json && node esm.js",
     "lint": "eslint --fix --ext .js,.ts .",
     "test": "jest"
   },
@@ -43,11 +45,20 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    }
   },
   "volta": {
     "node": "16.13.2",
     "npm": "8.3.1"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js"
+    }
   },
   "dependencies": {
     "@lanatools/pipe-parser": "^1.2.0"
