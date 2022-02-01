@@ -20,7 +20,7 @@ export interface Configurable<C = any> {
 
 export const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
 
-export abstract class ParserEngine<P extends SelectorOptions = SelectorOptions> {
+export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> {
   parse<T>(node: Node | null, context: P): Promise<T | null> {
     if (node === null) return Promise.resolve(null);
 
@@ -54,3 +54,9 @@ export interface SelectorOptions {
   trim?: boolean;
   transforms?: (TransformFunction | string)[];
 }
+
+export interface GeneralSelector<T = any> extends SelectorOptions {
+  selector: T,
+}
+
+export type SimpleSelector = string | string[];

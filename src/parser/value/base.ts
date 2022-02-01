@@ -1,12 +1,10 @@
-import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "../node.js";
+import { Configurable, GeneralSelector, Node, ParserEngine, SimpleSelector, TransformFunction } from "../node.js";
 import { parseSelectorString, wrapArray } from "../common.js";
 import { parse } from "@lanatools/pipe-parser";
 
-export interface ValueSelector extends SelectorOptions {
+export interface ValueSelector extends GeneralSelector<SimpleSelector> {
   selector: SimpleSelector;
 }
-
-export type SimpleSelector = string | string[];
 
 export interface ValueParserEngineConfig {
   transforms: {

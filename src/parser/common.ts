@@ -1,4 +1,4 @@
-import { ObjectSelector, Selector } from "./object.js";
+import { GeneralSelector, SimpleSelector } from "./node.js";
 import { ValueSelector } from "./value/base.js";
 
 export function wrapArray<T>(value?: T | T[] | null): T[] {
@@ -19,11 +19,11 @@ export function parseSelectorString(selector: string): { selector?: string, attr
   };
 }
 
-export function unwrapSelector(selector: Selector): ObjectSelector | ValueSelector {
+export function unwrapSelector<T>(selector: GeneralSelector<T> | SimpleSelector): GeneralSelector<T> | ValueSelector {
   if (typeof selector === "string" || Array.isArray(selector)) {
     return {
       selector
     };
   }
-  return selector as ObjectSelector | ValueSelector;
+  return selector;
 }

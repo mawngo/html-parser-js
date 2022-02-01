@@ -1,27 +1,28 @@
-import { Configurable, Node, ParserEngine, SelectorOptions, TransformFunction } from "./node.js";
+import { Configurable, GeneralSelector, Node, ParserEngine, SimpleSelector, TransformFunction } from "./node.js";
 import { unwrapSelector } from "./common.js";
-import { SimpleSelector, ValueSelector } from "./value/base.js";
 
-export type Selector = ObjectSelector | ValueSelector | SimpleSelector;
-export type MapSelector = { [key: string]: Selector };
+export type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
+  ObjectSelector<S>
+  | SimpleSelector
+  | S;
 
-export interface ObjectSelector extends SelectorOptions {
-  selector: MapSelector;
+export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelector<{ [key: string]: ObjectSelectorSupportedSelectors<S> }> {
+  selector: { [key: string]: ObjectSelectorSupportedSelectors<S> };
   objTransforms?: TransformFunction[];
 }
 
-export interface ObjectParserEngineOptions {
-  engines: ParserEngine[];
+export interface ObjectParserEngineOptions<P extends GeneralSelector> {
+  engines: (ParserEngine<P> | ObjectParserEngine<P>)[];
   objTransforms: {
     [key: string]: TransformFunction
   };
 }
 
 // Parse object values
-export class ObjectParserEngine extends ParserEngine<ObjectSelector> implements Configurable<ObjectParserEngineOptions> {
-  private options: ObjectParserEngineOptions = { engines: [], objTransforms: {} };
+export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<ObjectSelector<P>> implements Configurable<ObjectParserEngineOptions<P>> {
+  private options: ObjectParserEngineOptions<P> = { engines: [], objTransforms: {} };
 
-  config(options: Partial<ObjectParserEngineOptions>) {
+  config(options: Partial<ObjectParserEngineOptions<P>>) {
     // swallow copy, so the ref of engines arrays is kept
     this.options = { ...this.options, ...options };
   }
@@ -32,7 +33,7 @@ export class ObjectParserEngine extends ParserEngine<ObjectSelector> implements 
     return typeof selector.selector === "object";
   }
 
-  async parseNode<T>(node: Node, context: ObjectSelector): Promise<T | null> {
+  async parseNode<T>(node: Node, context: ObjectSelector<P>): Promise<T | null> {
     const parsed = {};
     for (const [key, value] of Object.entries(context.selector)) {
       parsed[key] = await this.parseSelectorValue(node, value, context);
@@ -41,9 +42,8 @@ export class ObjectParserEngine extends ParserEngine<ObjectSelector> implements 
     return parsed as T;
   }
 
-
-  private parseSelectorValue(node: Node, value: Selector, context: ObjectSelector): Promise<any | null> {
-    const selector = { ...unwrapSelector(value) };
+  private parseSelectorValue(node: Node, value: ObjectSelectorSupportedSelectors<P> | SimpleSelector, context: ObjectSelector<GeneralSelector>): Promise<any | null> {
+    const selector = { ...unwrapSelector(value) } as P;
     if (context.trim != null && selector.trim == null) {
       selector.trim = context.trim;
     }
