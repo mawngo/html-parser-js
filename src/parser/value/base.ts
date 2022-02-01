@@ -1,4 +1,4 @@
-import { Configurable, GeneralSelector, Node, ParserEngine, SimpleSelector, TransformFunction } from "../node.js";
+import { Configurable, GeneralSelector, Base, ParserEngine, SimpleSelector, TransformFunction } from "../base.js";
 import { parseSelectorString, wrapArray } from "../common.js";
 import { parse } from "@lanatools/pipe-parser";
 
@@ -19,7 +19,7 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
     this.options = { ...this.options, ...options };
   }
 
-  parseNode<T>(node: Node, context: P): Promise<T | null> {
+  parseNode<T>(node: Base, context: P): Promise<T | null> {
     context = { ...context };
     const isArray = Array.isArray(context.selector);
     const rawSelector = isArray ? context.selector[0] : context.selector as string;
@@ -45,7 +45,7 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
     return this.parseValue(attr, context);
   }
 
-  protected selectAttr(node: Node, attr: string | undefined, context: P): any | null {
+  protected selectAttr(node: Base, attr: string | undefined, context: P): any | null {
     if (!attr) attr = "text";
     let value: string | null;
 

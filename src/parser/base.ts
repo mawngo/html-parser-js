@@ -1,7 +1,7 @@
-export interface Node {
-  find(selector: string): Node[];
+export interface Base {
+  find(selector: string): Base[];
 
-  first(selector: string): Node | null;
+  first(selector: string): Base | null;
 
   text(): string;
 
@@ -11,7 +11,7 @@ export interface Node {
 }
 
 export interface NodeFactory {
-  loadHtml(html: string): Node;
+  loadHtml(html: string): Base;
 }
 
 export interface Configurable<C = any> {
@@ -21,7 +21,7 @@ export interface Configurable<C = any> {
 export const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
 
 export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> {
-  parse<T>(node: Node | null, context: P): Promise<T | null> {
+  parse<T>(node: Base | null, context: P): Promise<T | null> {
     if (node === null) return Promise.resolve(null);
 
     if (!context.scope) return this.parseNode<T>(node, context);
@@ -42,7 +42,7 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
     return this.parseNode(child, context);
   }
 
-  protected abstract parseNode<T>(node: Node, context: P): Promise<T | null>;
+  protected abstract parseNode<T>(node: Base, context: P): Promise<T | null>;
 
   abstract match(selector: any): boolean;
 }

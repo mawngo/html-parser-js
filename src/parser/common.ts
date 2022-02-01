@@ -1,4 +1,4 @@
-import { GeneralSelector, SimpleSelector } from "./node.js";
+import { GeneralSelector, SimpleSelector } from "./base.js";
 import { ValueSelector } from "./value/base.js";
 
 export function wrapArray<T>(value?: T | T[] | null): T[] {

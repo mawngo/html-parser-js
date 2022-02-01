@@ -1,4 +1,4 @@
-import { Configurable, GeneralSelector, Node, ParserEngine, SimpleSelector, TransformFunction } from "./node.js";
+import { Configurable, GeneralSelector, Base, ParserEngine, SimpleSelector, TransformFunction } from "./base.js";
 import { unwrapSelector } from "./common.js";
 
 export type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
@@ -38,7 +38,7 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     return typeof selector.selector === "object";
   }
 
-  async parseNode<T>(node: Node, context: ObjectSelector<P>): Promise<T | null> {
+  async parseNode<T>(node: Base, context: ObjectSelector<P>): Promise<T | null> {
     const parsed = {};
     for (const [key, value] of Object.entries(context.selector)) {
       parsed[key] = await this.parseSelectorValue(node, value, context);
@@ -47,7 +47,7 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     return parsed as T;
   }
 
-  private parseSelectorValue(node: Node, value: ObjectSelectorSupportedSelectors<P> | SimpleSelector, context: ObjectSelector<GeneralSelector>): Promise<any | null> {
+  private parseSelectorValue(node: Base, value: ObjectSelectorSupportedSelectors<P> | SimpleSelector, context: ObjectSelector<GeneralSelector>): Promise<any | null> {
     const selector = { ...unwrapSelector(value) } as P;
     if (context.trim != null && selector.trim == null) {
       selector.trim = context.trim;
