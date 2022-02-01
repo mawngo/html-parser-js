@@ -1,4 +1,4 @@
-import { DefaultValueParserEngine, parseString, StringParserEngine } from "../../../src/parser/value/string.js";
+import { DefaultParserEngine, parseString, StringParserEngine } from "../../../src/parser/value/string.js";
 
 describe("parseString", () => {
 
@@ -41,7 +41,7 @@ describe("parseString", () => {
   });
 
   it("default value should match correct selector", () => {
-    const parser = new DefaultValueParserEngine();
+    const parser = new DefaultParserEngine();
     expect(parser.match({ selector: "hello" })).toEqual(true);
     expect(parser.match({ selector: "hello", string: false })).toEqual(true);
     expect(parser.match({ selector: "hello", string: true })).toEqual(true);

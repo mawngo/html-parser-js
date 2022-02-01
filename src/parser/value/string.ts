@@ -21,7 +21,7 @@ export class StringParserEngine extends ValueParserEngine<StringSelector> {
   }
 }
 
-export class DefaultValueParserEngine extends StringParserEngine {
+export class DefaultParserEngine extends StringParserEngine {
   override match(selector: any): boolean {
     return this.isSimpleSelector(selector) && true;
   }

@@ -25,6 +25,11 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
   config(options: Partial<ObjectParserEngineOptions<P>>) {
     // swallow copy, so the ref of engines arrays is kept
     this.options = { ...this.options, ...options };
+
+    // validate registered engine
+    const hasOtherEngine = this.options.engines
+      .some(engine => !(engine instanceof ObjectParserEngine));
+    if (!hasOtherEngine) throw new Error("Object parser cannot work without other engine, Please register at least one other engine. Example: DefaultParserEngine");
   }
 
   match(selector: any): boolean {
