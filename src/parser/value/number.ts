@@ -1,6 +1,8 @@
 import { ValueParserEngine, ValueSelector } from "./base.js";
+import { SelectorOptions, SimpleSelector } from "../base.js";
+import { extractScope } from "../common.js";
 
-export interface NumberParseOptions {
+interface NumberParseOptions {
   int?: boolean;
   default?: number | null;
   roundMode?: "round" | "floor" | "ceil";
@@ -40,4 +42,35 @@ function parseIntIfRequired(num: number | null, options?: NumberParseOptions): n
 
   const mode = options?.roundMode || "round";
   return Math[mode]?.(num) ?? Math.round(num);
+}
+
+export function num(
+  selector: SimpleSelector,
+  opts?: SimpleSelector | NumberParseOptions & SelectorOptions,
+  defaultValue: number | null = null
+): NumberSelector {
+  const [scope, options] = extractScope(opts);
+  return {
+    number: true,
+    selector,
+    scope,
+    default: defaultValue,
+    ...options
+  };
+}
+
+export function int(
+  selector: SimpleSelector,
+  opts?: SimpleSelector | NumberParseOptions & SelectorOptions,
+  defaultValue: number | null = null
+): NumberSelector {
+  const [scope, options] = extractScope(opts);
+  return {
+    number: true,
+    int: true,
+    selector,
+    scope,
+    default: defaultValue,
+    ...options
+  };
 }

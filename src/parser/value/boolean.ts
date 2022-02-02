@@ -1,8 +1,8 @@
 import { ValueParserEngine, ValueSelector } from "./base.js";
-import { wrapArray } from "../common.js";
+import { extractScope, wrapArray } from "../common.js";
+import { SelectorOptions, SimpleSelector } from "../base.js";
 
-
-export interface BooleanParseOptions {
+interface BooleanParseOptions {
   truthy?: string | string[];
   falsy?: string | string[];
   default?: boolean | null;
@@ -45,4 +45,17 @@ export function parseBoolean(value: any, options: BooleanParseOptions = {}): boo
   if (typeof value === "number") return value !== 0;
   if (typeof value === "boolean") return value;
   return def;
+}
+
+export function bool(
+  selector: SimpleSelector,
+  opts?: SimpleSelector | BooleanParseOptions & SelectorOptions
+): BooleanSelector {
+  const [scope, options] = extractScope(opts);
+  return {
+    boolean: true,
+    selector,
+    scope,
+    ...options
+  };
 }

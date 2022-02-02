@@ -1,6 +1,8 @@
 import { ValueParserEngine, ValueSelector } from "./base.js";
+import { SelectorOptions, SimpleSelector } from "../base.js";
+import { extractScope } from "../common.js";
 
-export interface StringParseOptions {
+interface StringParseOptions {
   default?: string | null;
   defaultIfEmpty?: string | null;
   match?: string | RegExp;
@@ -44,4 +46,19 @@ function matchIfRequired(value: string | null, options?: StringParseOptions): st
   if (!options?.match) return value;
   const regex = new RegExp(options?.match);
   return regex.exec(value)?.[0] ?? options?.defaultIfNoMatch ?? null;
+}
+
+export function str(
+  selector: SimpleSelector,
+  opts?: SimpleSelector | StringParseOptions & SelectorOptions,
+  defaultValue: string | null = null
+): StringSelector {
+  const [scope, options] = extractScope(opts);
+  return {
+    string: true,
+    selector,
+    scope,
+    default: defaultValue,
+    ...options
+  };
 }

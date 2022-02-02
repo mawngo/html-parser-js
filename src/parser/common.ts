@@ -1,4 +1,4 @@
-import { GeneralSelector, SimpleSelector } from "./base.js";
+import { GeneralSelector, SelectorOptions, SimpleSelector } from "./base.js";
 import { ValueSelector } from "./value/base.js";
 
 export function wrapArray<T>(value?: T | T[] | null): T[] {
@@ -26,4 +26,13 @@ export function unwrapSelector<T>(selector: GeneralSelector<T> | SimpleSelector)
     };
   }
   return selector;
+}
+
+export function extractScope<T extends SelectorOptions>(option?: SimpleSelector | T): [SimpleSelector, T | SelectorOptions] {
+  if (!option) return ["", {}];
+  const actual: T | string = Array.isArray(option) ? option : option[0];
+  if (typeof actual === "string") return [option as SimpleSelector, {}];
+  if (!actual) return ["", {}];
+
+  return [(option as T).scope || "", (option as T) || {}];
 }

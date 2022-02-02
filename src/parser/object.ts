@@ -1,7 +1,15 @@
-import { Configurable, GeneralSelector, Base, ParserEngine, SimpleSelector, TransformFunction } from "./base.js";
-import { unwrapSelector } from "./common.js";
+import {
+  Base,
+  Configurable,
+  GeneralSelector,
+  ParserEngine,
+  SelectorOptions,
+  SimpleSelector,
+  TransformFunction
+} from "./base.js";
+import { extractScope, unwrapSelector } from "./common.js";
 
-export type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
+type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
   ObjectSelector<S>
   | SimpleSelector
   | S;
@@ -62,4 +70,16 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     }
     return Promise.resolve(null);
   }
+}
+
+export function obj<S extends GeneralSelector>(
+  selector: { [key: string]: ObjectSelectorSupportedSelectors<S> },
+  opts?: SimpleSelector | SelectorOptions
+): ObjectSelector<S> {
+  const [scope, options] = extractScope(opts);
+  return {
+    selector,
+    scope,
+    ...options
+  };
 }

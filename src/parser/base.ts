@@ -48,9 +48,10 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
 }
 
 export type TransformFunction = (value: any, ...args: any[]) => any;
+export type SimpleSelector = string | string[];
 
 export interface SelectorOptions {
-  scope?: string | string[];
+  scope?: SimpleSelector;
   trim?: boolean;
   transforms?: (TransformFunction | string)[];
 }
@@ -58,5 +59,3 @@ export interface SelectorOptions {
 export interface GeneralSelector<T = any> extends SelectorOptions {
   selector: T,
 }
-
-export type SimpleSelector = string | string[];
