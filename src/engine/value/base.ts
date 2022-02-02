@@ -33,22 +33,21 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
     if (isArray) {
       const attrs: Promise<any>[] = node.find(selector)
         .map(child => this.selectAttr(child, attribute, context))
-        .filter(attr => attr != null)
-        .map(attr => this.parseValue(attr as string, context));
+        .filter(attr => attr != null);
       return Promise.all(attrs) as Promise<unknown> as Promise<T>;
     }
 
     const firstNode = node.first(selector);
-    if (!firstNode) return Promise.resolve(null);
-    const attr = this.selectAttr(firstNode, attribute, context);
-    return this.parseValue(attr, context);
+    return this.selectAttr(firstNode, attribute, context);
   }
 
-  protected selectAttr(node: Node, attr: string | undefined, context: P): any | null {
+  protected selectAttr(node: Node | null, attr: string | undefined, context: P): Promise<any | null> {
     if (!attr) attr = "text";
     let value: string | null;
 
-    if (attr === "text") {
+    if (node == null) {
+      value = null;
+    } else if (attr === "text") {
       value = node.text();
     } else if (attr === "html") {
       value = node.html();
@@ -56,21 +55,17 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
       value = node.attr(attr);
     }
 
+    value = this.applyTransforms(value, context);
+    return this.parseValue(value, context);
+  }
+
+  private applyTransforms(value: any, context: P): any | null {
     if (value && context.trim !== false) value = value.trim();
     if (!context.transforms) return value;
 
     const transforms = this.buildTransformList(context.transforms);
     return transforms.reduce((val: any, transform) => transform(val), value);
   }
-
-  protected isSimpleSelector(selector?: any): boolean {
-    if (Array.isArray(selector?.selector)) {
-      return typeof selector?.selector[0] === "string";
-    }
-    return typeof selector?.selector === "string";
-  }
-
-  protected abstract parseValue(value: any, context: P): Promise<any | null>
 
   private buildTransformList(rawTransforms: (TransformFunction | string)[]): TransformFunction[] {
     const transforms: TransformFunction[] = [];
@@ -89,5 +84,14 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
     }
     return transforms;
   }
+
+  protected isSimpleSelector(selector?: any): boolean {
+    if (Array.isArray(selector?.selector)) {
+      return typeof selector?.selector[0] === "string";
+    }
+    return typeof selector?.selector === "string";
+  }
+
+  protected abstract parseValue(value: any, context: P): Promise<any | null>
 }
 
