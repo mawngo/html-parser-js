@@ -57,9 +57,7 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
       value = node.attr(attr);
     }
 
-    if (value == null) return null;
-    if (context.trim === false) return attr.trim();
-
+    if (value && context.trim !== false) value = value.trim();
     if (!context.transforms) return value;
 
     const transforms = this.buildTransformList(context.transforms);
