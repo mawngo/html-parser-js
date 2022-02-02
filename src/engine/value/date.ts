@@ -1,7 +1,7 @@
 import { ValueParserEngine, ValueSelector } from "./base.js";
 import { extractScope } from "../common.js";
 import { SelectorOptions, SimpleSelector } from "../base.js";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import dayjs, { Dayjs } from "dayjs";
 
 dayjs.extend(customParseFormat);
