@@ -1,4 +1,4 @@
-import { Configurable, GeneralSelector, Base, ParserEngine, SimpleSelector, TransformFunction } from "../base.js";
+import { Base, Configurable, GeneralSelector, ParserEngine, SimpleSelector, TransformFunction } from "../base.js";
 import { parseSelectorString, wrapArray } from "../common.js";
 import { parse } from "@lanatools/pipe-parser";
 

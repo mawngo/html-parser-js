@@ -1,4 +1,4 @@
-import { NumberParserEngine, parseNumber } from "../../../src/parser/value/number.js";
+import { NumberParserEngine, parseNumber } from "../../../src/engine/value/number.js";
 
 describe("parseNumber", () => {
   it("should parse boolean", () => {

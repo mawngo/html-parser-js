@@ -1,7 +1,7 @@
 import {
+  Base,
   GeneralSelector,
   isConfigurable,
-  Base,
   NodeFactory,
   ParserEngine,
   SimpleSelector,

@@ -1,4 +1,4 @@
-import { BooleanParserEngine, parseBoolean } from "../../../src/parser/value/boolean.js";
+import { BooleanParserEngine, parseBoolean } from "../../../src/engine/value/boolean.js";
 
 describe("parseBoolean", () => {
 

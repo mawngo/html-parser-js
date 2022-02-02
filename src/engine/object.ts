@@ -37,7 +37,7 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     // validate registered engine
     const hasOtherEngine = this.options.engines
       .some(engine => !(engine instanceof ObjectParserEngine));
-    if (!hasOtherEngine) throw new Error("Object parser cannot work without other engine, Please register at least one other engine. Example: DefaultParserEngine");
+    if (!hasOtherEngine) throw new Error("Object engine cannot work without other engine, Please register at least one other engine. Example: DefaultParserEngine");
   }
 
   match(selector: any): boolean {
