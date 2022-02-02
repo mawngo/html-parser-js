@@ -1,4 +1,5 @@
 import { parseSelectorString, wrapArray } from "../../src/engine/common.js";
+import { extractScope } from "../../dist/engine/common.js";
 
 describe("parseSelectorString", () => {
   const selectors = [
@@ -130,5 +131,21 @@ describe("wrapArray", () => {
 
   it("should wrap into array is single value passed", () => {
     expect(wrapArray("one")).toEqual(["one"]);
+  });
+});
+
+describe("extractScope", () => {
+  it("should extract scope", () => {
+    expect(extractScope({})).toEqual(["", {}]);
+    expect(extractScope({ scope: "hi" })).toEqual(["hi", { scope: "hi" }]);
+    expect(extractScope({ scope: undefined })).toEqual(["", { scope: undefined }]);
+    expect(extractScope({ scope: ["hi"] })).toEqual([["hi"], { scope: ["hi"] }]);
+    expect(extractScope({ scope: ["hi"], transforms: [] })).toEqual([["hi"], { scope: ["hi"], transforms: [] }]);
+    expect(extractScope({ scope: [] })).toEqual([[], { scope: [] }]);
+  });
+
+  it("should ignore simple selector", () => {
+    expect(extractScope("hello")).toEqual(["hello", {}]);
+    expect(extractScope(["hello"])).toEqual([["hello"], {}]);
   });
 });

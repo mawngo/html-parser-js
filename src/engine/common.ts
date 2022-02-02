@@ -30,9 +30,11 @@ export function unwrapSelector<T>(selector: GeneralSelector<T> | SimpleSelector)
 
 export function extractScope<T extends SelectorOptions>(option?: SimpleSelector | T): [SimpleSelector, T | SelectorOptions] {
   if (!option) return ["", {}];
-  const actual: T | string = Array.isArray(option) ? option : option[0];
+
+  const isArray = Array.isArray(option);
+  const actual: T | string | undefined = isArray ? option[0] : option;
+  if (!actual) return [isArray ? [] : "", {}];
   if (typeof actual === "string") return [option as SimpleSelector, {}];
-  if (!actual) return ["", {}];
 
   return [(option as T).scope || "", (option as T) || {}];
 }
