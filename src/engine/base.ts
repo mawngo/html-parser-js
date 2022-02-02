@@ -28,7 +28,9 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
 
     if (Array.isArray(context.scope)) {
       const scope = context.scope[0];
-      const children = scope ? node.find(scope) : [];
+      if (!scope) throw new Error("Invalid scope selector: []. Please provide valid scope (string or array of single string). Ex: 'h1' or ['h1']");
+
+      const children = node.find(scope);
       if (children.length === 0) return Promise.resolve([] as unknown as T);
 
       return Promise.all(children.map(node => this.parseNode(node, context)))
