@@ -41,7 +41,6 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
     const firstNode = node.first(selector);
     if (!firstNode) return Promise.resolve(null);
     const attr = this.selectAttr(firstNode, attribute, context);
-    if (!attr) return Promise.resolve(null);
     return this.parseValue(attr, context);
   }
 
