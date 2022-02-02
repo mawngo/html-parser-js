@@ -19,7 +19,7 @@ export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelect
   objTransforms?: TransformFunction[];
 }
 
-export interface ObjectParserEngineOptions<P extends GeneralSelector> {
+interface ObjectParserEngineOptions<P extends GeneralSelector> {
   engines: (ParserEngine<P> | ObjectParserEngine<P>)[];
   objTransforms: {
     [key: string]: TransformFunction

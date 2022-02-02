@@ -1,13 +1,15 @@
+import { unwrapSelector } from "../engine/common.js";
 import {
+  Configurable,
   GeneralSelector,
-  isConfigurable,
   Node,
   NodeFactory,
   ParserEngine,
   SimpleSelector,
   TransformFunction
-} from "./base.js";
-import { unwrapSelector } from "./common.js";
+} from "../engine/index.js";
+
+const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
 
 export interface ParserOptions<P extends GeneralSelector> {
   engines: ParserEngine<P>[];

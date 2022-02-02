@@ -1,7 +1,7 @@
 import { NumberParserEngine, NumberSelector } from "../engine/value/number.js";
 import { ObjectParserEngine, ObjectSelector } from "../engine/object.js";
 import { DefaultParserEngine, DefaultSelector } from "../engine/value/string.js";
-import { CoreParser, ParserOptions } from "../engine/parser.js";
+import { CoreParser, ParserOptions } from "./base.js";
 import { CheerioNodeFactory } from "./node-factory.js";
 import { load } from "cheerio";
 import { BooleanParserEngine, BooleanSelector } from "../engine/value/boolean.js";
@@ -37,7 +37,7 @@ type SupportedType<P extends GeneralSelector> =
   | DefaultSelector
   | P
 
-export class Parser<P extends GeneralSelector = DefaultSelector> extends CoreParser<SupportedType<P>> {
+export class Parsers<P extends GeneralSelector = DefaultSelector> extends CoreParser<SupportedType<P>> {
   constructor(options: Partial<ParserOptions<SupportedType<P>>>) {
     options.engines = [
       ...options.engines || [],

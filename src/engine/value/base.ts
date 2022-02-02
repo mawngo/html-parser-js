@@ -6,7 +6,7 @@ export interface ValueSelector extends GeneralSelector<SimpleSelector> {
   selector: SimpleSelector;
 }
 
-export interface ValueParserEngineConfig {
+interface ValueParserEngineConfig {
   transforms: {
     [key: string]: TransformFunction
   };
