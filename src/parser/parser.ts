@@ -6,6 +6,7 @@ import { CheerioNodeFactory } from "./node-factory.js";
 import { load } from "cheerio";
 import { BooleanParserEngine, BooleanSelector } from "../engine/value/boolean.js";
 import { GeneralSelector } from "../engine/base.js";
+import { DateParserEngine, DateSelector } from "../engine/value/date.js";
 
 type BasicSupportedType<P extends GeneralSelector> =
   | ObjectSelector<BasicSupportedType<P>>
@@ -32,6 +33,7 @@ type SupportedType<P extends GeneralSelector> =
   | ObjectSelector<SupportedType<P>>
   | NumberSelector
   | BooleanSelector
+  | DateSelector
   | DefaultSelector
   | P
 
@@ -42,6 +44,7 @@ export class Parser<P extends GeneralSelector = DefaultSelector> extends CorePar
       new ObjectParserEngine<SupportedType<P>>(),
       new NumberParserEngine(),
       new BooleanParserEngine(),
+      new DateParserEngine(),
       new DefaultParserEngine()
     ];
     super({

@@ -61,6 +61,7 @@
   },
   "dependencies": {
     "@lanatools/pipe-parser": "^1.2.0",
-    "cheerio": "^1.0.0-rc.10"
+    "cheerio": "^1.0.0-rc.10",
+    "dayjs": "^1.10.7"
   }
 }
