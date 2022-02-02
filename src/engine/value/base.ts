@@ -66,11 +66,11 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
     return transforms.reduce((val: any, transform) => transform(val), value);
   }
 
-  protected isSimpleSelector(selector: any): boolean {
-    if (Array.isArray(selector.selector)) {
-      return typeof selector.selector[0] === "string";
+  protected isSimpleSelector(selector?: any): boolean {
+    if (Array.isArray(selector?.selector)) {
+      return typeof selector?.selector[0] === "string";
     }
-    return typeof selector.selector === "string";
+    return typeof selector?.selector === "string";
   }
 
   protected abstract parseValue(value: any, context: P): Promise<any | null>

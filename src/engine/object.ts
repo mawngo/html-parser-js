@@ -40,10 +40,10 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     if (!hasOtherEngine) throw new Error("Object engine cannot work without other engine, Please register at least one other engine. Example: DefaultParserEngine");
   }
 
-  match(selector: any): boolean {
-    if (selector.object === false) return false;
-    if (Array.isArray(selector.selector)) return false;
-    return typeof selector.selector === "object";
+  match(selector?: any): boolean {
+    if (selector?.object === false) return false;
+    if (Array.isArray(selector?.selector)) return false;
+    return typeof selector?.selector === "object";
   }
 
   async parseNode<T>(node: Node, context: ObjectSelector<P>): Promise<T | null> {

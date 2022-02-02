@@ -19,7 +19,7 @@ export interface DefaultSelector extends ValueSelector, StringParseOptions {
 
 export class StringParserEngine extends ValueParserEngine<StringSelector> {
   match(selector: any): boolean {
-    return this.isSimpleSelector(selector) && selector.string === true;
+    return this.isSimpleSelector(selector) && selector?.string === true;
   }
 
   protected parseValue(value: any, context: StringSelector): Promise<string | null> {
@@ -28,7 +28,7 @@ export class StringParserEngine extends ValueParserEngine<StringSelector> {
 }
 
 export class DefaultParserEngine extends ValueParserEngine<DefaultSelector> {
-  match(selector: any): boolean {
+  match(selector?: any): boolean {
     return this.isSimpleSelector(selector) && true;
   }
 

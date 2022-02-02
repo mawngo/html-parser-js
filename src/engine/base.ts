@@ -44,7 +44,7 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
 
   protected abstract parseNode<T>(node: Node, context: P): Promise<T | null>;
 
-  abstract match(selector: any): boolean;
+  abstract match(selector?: any): boolean;
 }
 
 export type TransformFunction = (value: any, ...args: any[]) => any;

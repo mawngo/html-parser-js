@@ -13,8 +13,8 @@ export interface NumberSelector extends ValueSelector, NumberParseOptions {
 }
 
 export class NumberParserEngine extends ValueParserEngine<NumberSelector> {
-  match(selector: any): boolean {
-    return this.isSimpleSelector(selector) && selector.number === true;
+  match(selector?: any): boolean {
+    return this.isSimpleSelector(selector) && selector?.number === true;
   }
 
   protected parseValue(value: any, context: NumberSelector): Promise<number | null> {
