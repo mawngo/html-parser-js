@@ -13,6 +13,10 @@ export interface StringSelector extends ValueSelector, StringParseOptions {
   string: true;
 }
 
+export interface DefaultSelector extends ValueSelector, StringParseOptions {
+  string?: true;
+}
+
 export class StringParserEngine extends ValueParserEngine<StringSelector> {
   match(selector: any): boolean {
     return this.isSimpleSelector(selector) && selector.string === true;
@@ -23,9 +27,13 @@ export class StringParserEngine extends ValueParserEngine<StringSelector> {
   }
 }
 
-export class DefaultParserEngine extends StringParserEngine {
-  override match(selector: any): boolean {
+export class DefaultParserEngine extends ValueParserEngine<DefaultSelector> {
+  match(selector: any): boolean {
     return this.isSimpleSelector(selector) && true;
+  }
+
+  protected parseValue(value: any, context: StringSelector): Promise<string | null> {
+    return Promise.resolve(parseString(value, context));
   }
 }
 
