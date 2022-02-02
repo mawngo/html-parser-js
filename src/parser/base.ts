@@ -4,11 +4,12 @@ import {
   GeneralSelector,
   Node,
   NodeFactory,
-  ObjectSelector,
   ParserEngine,
   SimpleSelector,
   TransformFunction
-} from "../engine/index.js";
+} from "../engine/base.js";
+import { ObjectSelector } from "../engine/object.js";
+
 
 const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
 

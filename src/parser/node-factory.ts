@@ -1,6 +1,6 @@
 import { Cheerio, CheerioAPI } from "cheerio";
 import { Node as CheerioNodeElement } from "domhandler/lib/node.js";
-import { Node, NodeFactory } from "../engine/index.js";
+import { Node, NodeFactory } from "../engine/base.js";
 
 export class CheerioNodeFactory implements NodeFactory {
   private readonly $: CheerioAPI;
