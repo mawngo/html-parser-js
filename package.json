@@ -1,12 +1,11 @@
 {
   "name": "@lanatools/html-parser",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Parse html to json object using predefined json schema.",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "type": "commonjs",
-  "private": true,
   "scripts": {
     "start": "tsc --p tsconfig.build.json && node dist/index.js",
     "dev": "ts-node src/index.ts",
@@ -14,9 +13,13 @@
     "lint": "eslint --fix --ext .js,.ts .",
     "test": "jest"
   },
+  "engines": {
+    "npm": ">=6.0.0",
+    "node": ">=14.0.0"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sitdownrightnow2552/ts-template.git"
+    "url": "git+https://github.com/sitdownrightnow2552/html-parser.git"
   },
   "keywords": [
     "template"
@@ -24,9 +27,9 @@
   "author": "Lana",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sitdownrightnow2552/ts-template/issues"
+    "url": "https://github.com/sitdownrightnow2552/html-parser/issues"
   },
-  "homepage": "https://github.com/sitdownrightnow2552/ts-template#readme",
+  "homepage": "https://github.com/sitdownrightnow2552/html-parser#readme",
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/node": "^16.10.2",
