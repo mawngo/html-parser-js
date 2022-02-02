@@ -4,6 +4,7 @@ import {
   GeneralSelector,
   Node,
   NodeFactory,
+  ObjectSelector,
   ParserEngine,
   SimpleSelector,
   TransformFunction
@@ -28,11 +29,21 @@ export class CoreParser<P extends GeneralSelector> {
     }
   }
 
+  parseHtml<T>(html: string, selector: string[]): Promise<T>;
+  parseHtml<T>(html: string, selector: P & { scope: string[] }): Promise<T>;
+  parseHtml<T>(html: string, selector: P & { selector: string[] }): Promise<T>;
+  parseHtml<T>(html: string, selector: P & ObjectSelector<P>): Promise<T>;
+  parseHtml<T>(html: string, selector: P | SimpleSelector): Promise<T | null>;
   parseHtml<T>(html: string, selector: P | SimpleSelector): Promise<T | null> {
     const node = this.options.nodeFactory.loadHtml(html);
-    return this.parseNode(node, selector);
+    return this.parseNode<T>(node, selector);
   }
 
+  parseNode<T>(node: Node, selector: string[]): Promise<T>;
+  parseNode<T>(node: Node, selector: P & { scope: string[] }): Promise<T>;
+  parseNode<T>(node: Node, selector: P & { selector: string[] }): Promise<T>;
+  parseNode<T>(node: Node, selector: P & ObjectSelector<P>): Promise<T>;
+  parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null>;
   parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null> {
     const unwrappedSelector = unwrapSelector(selector) as P;
     for (const engine of this.options.engines) {

@@ -28,9 +28,7 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
 
     if (Array.isArray(context.scope)) {
       const scope = context.scope[0];
-      if (!scope) return this.parseNode<T>(node, context);
-
-      const children = node.find(scope);
+      const children = scope ? node.find(scope) : [];
       if (children.length === 0) return Promise.resolve([] as unknown as T);
 
       return Promise.all(children.map(node => this.parseNode(node, context)))
