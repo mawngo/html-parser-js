@@ -1,7 +1,7 @@
 import {
-  Base,
   GeneralSelector,
   isConfigurable,
+  Node,
   NodeFactory,
   ParserEngine,
   SimpleSelector,
@@ -31,7 +31,7 @@ export class CoreParser<P extends GeneralSelector> {
     return this.parseNode(node, selector);
   }
 
-  parseNode<T>(node: Base, selector: P | SimpleSelector): Promise<T | null> {
+  parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null> {
     const unwrappedSelector = unwrapSelector(selector) as P;
     for (const engine of this.options.engines) {
       if (!engine.match(unwrappedSelector)) continue;
