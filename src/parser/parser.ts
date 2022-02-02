@@ -37,7 +37,7 @@ type SupportedType<P extends GeneralSelector> =
   | DefaultSelector
   | P
 
-export class Parsers<P extends GeneralSelector = DefaultSelector> extends CoreParser<SupportedType<P>> {
+export class Parser<P extends GeneralSelector = DefaultSelector> extends CoreParser<SupportedType<P>> {
   constructor(options: Partial<ParserOptions<SupportedType<P>>>) {
     options.engines = [
       ...options.engines || [],
