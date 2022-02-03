@@ -37,7 +37,7 @@ export function extractScope<T extends SelectorOptions>(option?: SimpleSelector 
   if (!actual) return [isArray ? [] : "", {}];
   if (typeof actual === "string") return [option as SimpleSelector, {}];
 
-  return [(option as T).scope || "", (option as T) || {}];
+  return [(option as T).scope || "", option as T];
 }
 
 export function buildTransformList(

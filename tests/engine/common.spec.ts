@@ -96,6 +96,7 @@ describe("parseSelectorString", () => {
     expect("a[href][class]").toEqual(parsed.selector);
     expect("html").toEqual(parsed.attribute);
     expect(["filter1", "filter2"]).toEqual(parsed.transforms);
+    expect({ transforms: ["last:four"] }).toEqual(parseSelectorString("|last:four"));
   });
 
   it("should support transforms with arguments", () => {
@@ -136,6 +137,9 @@ describe("wrapArray", () => {
 describe("extractScope", () => {
   it("should extract scope", () => {
     expect(extractScope({})).toEqual(["", {}]);
+    expect(extractScope(undefined)).toEqual(["", {}]);
+    expect(extractScope("")).toEqual(["", {}]);
+    expect(extractScope([""])).toEqual([[], {}]);
     expect(extractScope({ scope: "hi" })).toEqual(["hi", { scope: "hi" }]);
     expect(extractScope({ scope: undefined })).toEqual(["", { scope: undefined }]);
     expect(extractScope({ scope: ["hi"] })).toEqual([["hi"], { scope: ["hi"] }]);
