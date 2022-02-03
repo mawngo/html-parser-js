@@ -5,7 +5,7 @@ import { CoreParser, CoreParserOptions } from "./base.js";
 import { CheerioNodeFactory } from "./node-factory.js";
 import { load } from "cheerio";
 import { BooleanParserEngine, BooleanSelector } from "../engine/value/boolean.js";
-import { GeneralSelector, TransformFunction } from "../engine/base.js";
+import { GeneralSelector, ParserEngine, TransformFunction } from "../engine/base.js";
 import { DateParserEngine, DateSelector } from "../engine/value/date.js";
 
 type BasicSupportedType<P extends GeneralSelector> =
@@ -28,7 +28,7 @@ export class BasicParser<P extends GeneralSelector = DefaultSelector> extends Co
     ];
     super({
       nodeFactory: new CheerioNodeFactory(load("")),
-      ...options
+      ...options as Partial<ParserOptions<BasicSupportedType<P>>> & { engines: ParserEngine<P>[] }
     });
   }
 }

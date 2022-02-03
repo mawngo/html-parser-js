@@ -28,6 +28,17 @@ function createParser<P extends GeneralSelector>(engine: ParserEngine<P>) {
   });
 }
 
+describe("Core parser", () => {
+  it("should throw if no engines provided", () => {
+    expect(() => {
+      new CoreParser({
+        engines: [],
+        nodeFactory: new CheerioNodeFactory(load(""))
+      });
+    }).toThrow();
+  });
+});
+
 describe("Default/String engine", () => {
   for (const engine of [new DefaultParserEngine(), new StringParserEngine()]) {
     const parser = createParser<StringSelector>(engine);

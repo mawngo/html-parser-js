@@ -22,8 +22,9 @@ export interface CoreParserOptions<P extends GeneralSelector> {
 export class CoreParser<P extends GeneralSelector> {
   protected readonly options: CoreParserOptions<P>;
 
-  constructor(options: Partial<CoreParserOptions<P>> & { nodeFactory: NodeFactory }) {
-    this.options = { engines: [], transforms: {}, ...options };
+  constructor(options: Partial<CoreParserOptions<P>> & { nodeFactory: NodeFactory, engines: ParserEngine<P>[] }) {
+    this.options = { transforms: {}, ...options };
+    if (!this.options.engines.length) throw new Error("No engine provided. please provide at least one engine in engines[] option");
     for (const engine of this.options.engines) {
       if (!isConfigurable(engine)) continue;
       engine.config(options);
