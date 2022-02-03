@@ -1,6 +1,7 @@
 .idea/
 .idea_modules/
 
+coverage/
 logs/
 *.log
 npm-debug.log*

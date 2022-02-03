@@ -43,15 +43,12 @@ type SupportedType<P extends GeneralSelector> =
   | DefaultSelector
   | P
 
-export class Parser<P extends GeneralSelector = DefaultSelector> extends CoreParser<SupportedType<P>> {
+export class Parser<P extends GeneralSelector = DefaultSelector> extends BasicParser<SupportedType<P>> {
   constructor(options: Partial<ParserOptions<SupportedType<P>>> = {}) {
     options.engines = [
       ...options.engines || [],
-      new ObjectParserEngine<SupportedType<P>>(),
-      new NumberParserEngine(),
       new BooleanParserEngine(),
-      new DateParserEngine(),
-      new DefaultParserEngine()
+      new DateParserEngine()
     ];
     super({
       nodeFactory: new CheerioNodeFactory(load("")),

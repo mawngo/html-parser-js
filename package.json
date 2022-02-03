@@ -11,7 +11,7 @@
     "dev": "ts-node src/index.ts",
     "dist": "tsc -p tsconfig.build.json && tsc -p tsconfig.build-esm.json && node esm.js",
     "lint": "eslint --fix --ext .js,.ts .",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "engines": {
     "npm": ">=6.0.0",
