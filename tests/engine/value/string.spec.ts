@@ -43,7 +43,7 @@ describe("parseString", () => {
   it("default value should match correct selector", () => {
     const parser = new DefaultParserEngine();
     expect(parser.match({ selector: "hello" })).toEqual(true);
-    expect(parser.match({ selector: "hello", string: false })).toEqual(true);
+    expect(parser.match({ selector: "hello", string: false })).toEqual(false);
     expect(parser.match({ selector: "hello", string: true })).toEqual(true);
     expect(parser.match({ selector: {} })).toEqual(false);
   });
