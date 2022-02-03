@@ -10,7 +10,6 @@ import { DateParserEngine, DateSelector } from "../engine/value/date.js";
 
 type BasicSupportedType<P extends GeneralSelector> =
   | ObjectSelector<BasicSupportedType<P>>
-  | NumberSelector
   | DefaultSelector
   | P
 
@@ -25,7 +24,6 @@ export class BasicParser<P extends GeneralSelector = DefaultSelector> extends Co
     options.engines = [
       ...options.engines || [],
       new ObjectParserEngine<BasicSupportedType<P>>(),
-      new NumberParserEngine(),
       new DefaultParserEngine()
     ];
     super({
@@ -47,6 +45,7 @@ export class Parser<P extends GeneralSelector = DefaultSelector> extends BasicPa
   constructor(options: Partial<ParserOptions<SupportedType<P>>> = {}) {
     options.engines = [
       ...options.engines || [],
+      new NumberParserEngine(),
       new BooleanParserEngine(),
       new DateParserEngine()
     ];
