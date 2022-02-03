@@ -23,10 +23,10 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
     context = { ...context };
     const isArray = Array.isArray(context.selector);
     const rawSelector = isArray ? context.selector[0] : context.selector as string;
-    if (!rawSelector) throw new Error("Empty selector. Please check your selector schema syntax");
+    if (!rawSelector) return Promise.reject(new Error("Empty selector. Please check your selector schema syntax"));
 
     const { selector, attribute, transforms } = parseSelectorString(rawSelector);
-    if (!selector) throw new Error("Empty selector. Please check your selector schema syntax");
+    if (!selector) return Promise.reject(new Error("Empty selector. Please check your selector schema syntax"));
     // add transform from selector to transform array
     context.transforms = [...transforms, ...wrapArray(context.transforms)];
 
