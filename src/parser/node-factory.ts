@@ -10,17 +10,15 @@ export class CheerioNodeFactory implements NodeFactory {
   }
 
   loadHtml(html: string): Node {
-    return new CheerioNode(this.$.load(html).root(), this.$);
+    return new CheerioNode(this.$.load(html).root());
   }
 }
 
 export class CheerioNode implements Node {
-  private readonly $: CheerioAPI;
-  private readonly el: Cheerio<CheerioNodeElement>;
+  public readonly el: Cheerio<CheerioNodeElement>;
 
-  constructor(el: Cheerio<CheerioNodeElement>, $: CheerioAPI) {
+  constructor(el: Cheerio<CheerioNodeElement>) {
     this.el = el;
-    this.$ = $;
   }
 
   attr(name: string): string | null {
@@ -31,8 +29,8 @@ export class CheerioNode implements Node {
     const elements = this.el.find(selector);
     if (elements.length === 0) return [];
     const nodes: Node[] = [];
-    elements.each((_, el) => {
-      nodes.push(new CheerioNode(this.$(el), this.$));
+    elements.each((i) => {
+      nodes.push(new CheerioNode(elements.eq(i)));
     });
     return nodes;
   }
@@ -40,7 +38,7 @@ export class CheerioNode implements Node {
   first(selector: string): Node | null {
     const elements = this.el.find(selector);
     if (elements.length === 0) return null;
-    return new CheerioNode(this.$(elements.first()), this.$);
+    return new CheerioNode(elements.first());
   }
 
   innerHTML(): string {
