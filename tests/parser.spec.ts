@@ -155,6 +155,14 @@ describe("Default Parser", () => {
     expect(data).toEqual("Intentionally Static: This page will never change");
   });
 
+  it("should throw if selector is empty", () => {
+    const parser = new Parser();
+    expect(parser.parseHtml(html, { selector: { h1: "" } })).rejects.toThrow();
+    expect(parser.parseHtml(html, "")).rejects.toThrow();
+    expect(parser.parseHtml(html, [""])).rejects.toThrow();
+    expect(parser.parseHtml(html, [])).rejects.toThrow();
+  });
+
   it("should work with simple selector", async () => {
     const parser = new Parser();
     expect(await parser.parseHtml(html, { selector: "h1" })).toEqual("Intentionally Static: This page will never change");

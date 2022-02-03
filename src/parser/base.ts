@@ -35,7 +35,7 @@ export class CoreParser<P extends GeneralSelector> {
   parseHtml<T>(html: string, selector: P & { selector: string[] }): Promise<T>;
   parseHtml<T>(html: string, selector: P & ObjectSelector<P>): Promise<T>;
   parseHtml<T>(html: string, selector: P | SimpleSelector): Promise<T | null>;
-  parseHtml<T>(html: string, selector: P | SimpleSelector): Promise<T | null> {
+  async parseHtml<T>(html: string, selector: P | SimpleSelector): Promise<T | null> {
     const node = this.options.nodeFactory.loadHtml(html);
     return this.parseNode<T>(node, selector);
   }
@@ -45,12 +45,12 @@ export class CoreParser<P extends GeneralSelector> {
   parseNode<T>(node: Node, selector: P & { selector: string[] }): Promise<T>;
   parseNode<T>(node: Node, selector: P & ObjectSelector<P>): Promise<T>;
   parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null>;
-  parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null> {
+  async parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null> {
     const unwrappedSelector = unwrapSelector(selector) as P;
     for (const engine of this.options.engines) {
       if (!engine.match(unwrappedSelector)) continue;
       return engine.parse<T>(node, unwrappedSelector);
     }
-    return Promise.resolve(null);
+    return null;
   }
 }

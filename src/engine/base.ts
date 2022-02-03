@@ -45,7 +45,7 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
 
   private tryAutoScoping<T>(node: Node, context: P): Promise<T | null> {
     const selector = Array.isArray(context.selector) ? context.selector[0] : context.selector;
-    if (!selector) return Promise.reject(new Error("Selector is required"));
+    if (!selector) return Promise.reject(new Error("Please provide a non-empty selector"));
     if (typeof selector !== "string") return Promise.reject(new Error("Invalid scope: []. Auto scoping only support simple selector. Please provide valid scope (string or array of single string). Ex: 'h1' or ['h1']"));
 
     const grandchildren = node.find(selector);

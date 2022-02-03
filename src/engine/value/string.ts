@@ -29,7 +29,12 @@ export class StringParserEngine extends ValueParserEngine<StringSelector> {
 
 export class DefaultParserEngine extends ValueParserEngine<DefaultSelector> {
   match(selector?: any): boolean {
-    return this.isSimpleSelector(selector) && true;
+    if (!selector || !selector.selector) throw new Error("Please provide a non-empty selector");
+    if (Array.isArray(selector.selector)) {
+      if (!selector.selector[0]) throw new Error("Please provide a non-empty selector");
+      return typeof selector.selector[0] === "string";
+    }
+    return typeof selector.selector === "string";
   }
 
   protected parseValue(value: any, context: StringSelector): Promise<string | null> {
