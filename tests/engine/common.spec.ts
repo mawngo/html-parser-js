@@ -1,4 +1,4 @@
-import { extractScope, parseSelectorString, wrapArray } from "../../src/engine/common.js";
+import { buildTransformList, extractScope, parseSelectorString, wrapArray } from "../../src/engine/common.js";
 
 describe("parseSelectorString", () => {
   const selectors = [
@@ -146,5 +146,24 @@ describe("extractScope", () => {
   it("should ignore simple selector", () => {
     expect(extractScope("hello")).toEqual(["hello", {}]);
     expect(extractScope(["hello"])).toEqual([["hello"], {}]);
+  });
+});
+
+describe("buildTransformList", () => {
+  it("should build", () => {
+    const builtIns = {
+      one(val) {
+        return val?.toString() + " one";
+      },
+      last(val, append) {
+        return val?.toString() + ` ${append}.`;
+      }
+    };
+    const transforms = ["one", (val) => val?.toString() + " two", "three", "last:four"];
+    const transFormList = buildTransformList(transforms, builtIns);
+    expect(transFormList.length).toEqual(3);
+
+    const afterTransform = transFormList.reduce((val: any, transform) => transform(val), "raw value");
+    expect(afterTransform).toEqual("raw value one two four.");
   });
 });

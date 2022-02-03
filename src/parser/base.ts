@@ -13,16 +13,16 @@ import { ObjectSelector } from "../engine/object.js";
 
 const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
 
-export interface ParserOptions<P extends GeneralSelector> {
+export interface CoreParserOptions<P extends GeneralSelector> {
   engines: ParserEngine<P>[];
   nodeFactory: NodeFactory;
   transforms: { [key: string]: TransformFunction };
 }
 
 export class CoreParser<P extends GeneralSelector> {
-  protected readonly options: ParserOptions<P>;
+  protected readonly options: CoreParserOptions<P>;
 
-  constructor(options: Partial<ParserOptions<P>> & { nodeFactory: NodeFactory }) {
+  constructor(options: Partial<CoreParserOptions<P>> & { nodeFactory: NodeFactory }) {
     this.options = { engines: [], transforms: {}, ...options };
     for (const engine of this.options.engines) {
       if (!isConfigurable(engine)) continue;

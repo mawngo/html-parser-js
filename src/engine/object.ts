@@ -7,7 +7,7 @@ import {
   SimpleSelector,
   TransformFunction
 } from "./base.js";
-import { extractScope, unwrapSelector } from "./common.js";
+import { buildTransformList, extractScope, unwrapSelector } from "./common.js";
 
 type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
   ObjectSelector<S>
@@ -16,7 +16,7 @@ type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
 
 export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelector<{ [key: string]: ObjectSelectorSupportedSelectors<S> }> {
   selector: { [key: string]: ObjectSelectorSupportedSelectors<S> };
-  objTransforms?: TransformFunction[];
+  objTransforms?: (TransformFunction | string)[];
 }
 
 interface ObjectParserEngineOptions<P extends GeneralSelector> {
@@ -51,8 +51,13 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     for (const [key, value] of Object.entries(context.selector)) {
       parsed[key] = await this.parseSelectorValue(node, value, context);
     }
-    // TODO: apply object transform
-    return parsed as T;
+    return this.applyTransforms(parsed, context) as T;
+  }
+
+  private applyTransforms(value: any, context: ObjectSelector<P>): any | null {
+    if (!context.objTransforms || !context.objTransforms.length) return value;
+    const transforms = buildTransformList(context.objTransforms, this.options.objTransforms);
+    return transforms.reduce((val: any, transform) => transform(val), value);
   }
 
   private parseSelectorValue(node: Node, value: ObjectSelectorSupportedSelectors<P> | SimpleSelector, context: ObjectSelector<GeneralSelector>): Promise<any | null> {
@@ -62,6 +67,7 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     }
     if (context.transforms && context.transforms.length) {
       selector.transforms = selector.transforms || [];
+      // add transform from object to selector transform array. transform from object run last
       selector.transforms = [...selector.transforms, ...context.transforms];
     }
     for (const engine of this.options.engines) {

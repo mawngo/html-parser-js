@@ -1,11 +1,11 @@
 import { NumberParserEngine, NumberSelector } from "../engine/value/number.js";
 import { ObjectParserEngine, ObjectSelector } from "../engine/object.js";
 import { DefaultParserEngine, DefaultSelector } from "../engine/value/string.js";
-import { CoreParser, ParserOptions } from "./base.js";
+import { CoreParser, CoreParserOptions } from "./base.js";
 import { CheerioNodeFactory } from "./node-factory.js";
 import { load } from "cheerio";
 import { BooleanParserEngine, BooleanSelector } from "../engine/value/boolean.js";
-import { GeneralSelector } from "../engine/base.js";
+import { GeneralSelector, TransformFunction } from "../engine/base.js";
 import { DateParserEngine, DateSelector } from "../engine/value/date.js";
 
 type BasicSupportedType<P extends GeneralSelector> =
@@ -13,6 +13,12 @@ type BasicSupportedType<P extends GeneralSelector> =
   | NumberSelector
   | DefaultSelector
   | P
+
+export interface ParserOptions<P extends GeneralSelector> extends CoreParserOptions<P> {
+  objTransforms: {
+    [key: string]: TransformFunction
+  };
+}
 
 export class BasicParser<P extends GeneralSelector = DefaultSelector> extends CoreParser<BasicSupportedType<P>> {
   constructor(options: Partial<ParserOptions<BasicSupportedType<P>>> = {}) {

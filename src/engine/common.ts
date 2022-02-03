@@ -1,5 +1,6 @@
-import { GeneralSelector, SelectorOptions, SimpleSelector } from "./base.js";
+import { GeneralSelector, SelectorOptions, SimpleSelector, TransformFunction } from "./base.js";
 import { ValueSelector } from "./value/base.js";
+import { parse } from "@lanatools/pipe-parser";
 
 export function wrapArray<T>(value?: T | T[] | null): T[] {
   if (Array.isArray(value)) return value;
@@ -37,4 +38,25 @@ export function extractScope<T extends SelectorOptions>(option?: SimpleSelector 
   if (typeof actual === "string") return [option as SimpleSelector, {}];
 
   return [(option as T).scope || "", (option as T) || {}];
+}
+
+export function buildTransformList(
+  rawTransforms: (TransformFunction | string)[],
+  builtIns: { [key: string]: TransformFunction } = {}
+): TransformFunction[] {
+  const transforms: TransformFunction[] = [];
+  for (const raw of rawTransforms) {
+    if (typeof raw !== "string") {
+      transforms.push(raw);
+      continue;
+    }
+
+    const transformStrings = parse(raw);
+    for (const transformString of transformStrings) {
+      const transform = builtIns[transformString.name];
+      if (!transform) continue;
+      transforms.push((val: any) => transform(val, ...transformString.args));
+    }
+  }
+  return transforms;
 }
