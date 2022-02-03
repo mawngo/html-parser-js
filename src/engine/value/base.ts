@@ -49,8 +49,10 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
       value = null;
     } else if (attr === "text") {
       value = node.text();
-    } else if (attr === "html") {
-      value = node.html();
+    } else if (attr === "html" || attr === "innerHTML") {
+      value = node.innerHTML();
+    } else if (attr === "outerHTML") {
+      value = node.outerHTML();
     } else {
       value = node.attr(attr);
     }

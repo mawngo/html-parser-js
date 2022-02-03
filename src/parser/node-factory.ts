@@ -43,11 +43,15 @@ export class CheerioNode implements Node {
     return new CheerioNode(this.$(elements.first()), this.$);
   }
 
-  html(): string | null {
-    return this.el.html();
+  innerHTML(): string {
+    return this.el.html() ?? "";
   }
 
   text(): string {
     return this.el.text();
+  }
+
+  outerHTML(): string {
+    return this.el.toString();
   }
 }

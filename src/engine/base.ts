@@ -5,7 +5,9 @@ export interface Node {
 
   text(): string;
 
-  html(): string | null;
+  innerHTML(): string;
+
+  outerHTML(): string;
 
   attr(name: string): string | null;
 }
