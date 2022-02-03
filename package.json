@@ -1,6 +1,6 @@
 {
   "name": "@lanatools/html-parser",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Parse html to json object using predefined json schema.",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -22,7 +22,11 @@
     "url": "git+https://github.com/sitdownrightnow2552/html-parser.git"
   },
   "keywords": [
-    "template"
+    "web",
+    "scrape",
+    "parser",
+    "html",
+    "structure"
   ],
   "author": "Lana",
   "license": "MIT",
