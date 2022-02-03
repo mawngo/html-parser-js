@@ -1,5 +1,4 @@
-import { parseSelectorString, wrapArray } from "../../src/engine/common.js";
-import { extractScope } from "../../dist/engine/common.js";
+import { extractScope, parseSelectorString, wrapArray } from "../../src/engine/common.js";
 
 describe("parseSelectorString", () => {
   const selectors = [
