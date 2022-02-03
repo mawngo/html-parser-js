@@ -3,6 +3,8 @@ export interface Node {
 
   first(selector: string): Node | null;
 
+  parent(): Node;
+
   text(): string;
 
   innerHTML(): string;
@@ -10,6 +12,8 @@ export interface Node {
   outerHTML(): string;
 
   attr(name: string): string | null;
+
+  is(node: Node): boolean;
 }
 
 export interface NodeFactory {
@@ -20,8 +24,6 @@ export interface Configurable<C = any> {
   config(options: C | Partial<C>);
 }
 
-export const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
-
 export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> {
   parse<T>(node: Node | null, context: P): Promise<T | null> {
     if (node === null) return Promise.resolve(null);
@@ -30,13 +32,10 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
 
     if (Array.isArray(context.scope)) {
       const scope = context.scope[0];
-      if (!scope) return Promise.reject(new Error("Invalid scope selector: []. Please provide valid scope (string or array of single string). Ex: 'h1' or ['h1']"));
+      if (!scope) return this.tryAutoScoping(node, context);
 
       const children = node.find(scope);
-      if (children.length === 0) return Promise.resolve([] as unknown as T);
-
-      return Promise.all(children.map(node => this.parseNode(node, context)))
-        .then(values => values.filter(val => val != null)) as unknown as Promise<T>;
+      return this.parseAllNode(children, context);
     }
 
     const child = node.first(context.scope);
@@ -44,9 +43,35 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
     return this.parseNode(child, context);
   }
 
+  private tryAutoScoping<T>(node: Node, context: P): Promise<T | null> {
+    const selector = Array.isArray(context.selector) ? context.selector[0] : context.selector;
+    if (!selector) return Promise.reject(new Error("Selector is required"));
+    if (typeof selector !== "string") return Promise.reject(new Error("Invalid scope: []. Auto scoping only support simple selector. Please provide valid scope (string or array of single string). Ex: 'h1' or ['h1']"));
+
+    const grandchildren = node.find(selector);
+    const children = removeDuplicateNode(grandchildren.map(child => child.parent()));
+    return this.parseAllNode(children, context);
+  }
+
+  private parseAllNode<T>(nodes: Node[], context: P): Promise<T> {
+    if (nodes.length === 0) return Promise.resolve([] as unknown as T);
+    return Promise.all(nodes.map(node => this.parseNode(node, context)))
+      .then(values => values.filter(val => val != null)) as unknown as Promise<T>;
+  }
+
   protected abstract parseNode<T>(node: Node, context: P): Promise<T | null>;
 
   abstract match(selector?: any): boolean;
+}
+
+function removeDuplicateNode(nodes: Node[]): Node[] {
+  const uniqueNodes: Node[] = [];
+  for (const node of nodes) {
+    const existed = uniqueNodes.some(uniqueNode => node.is(uniqueNode));
+    if (existed) continue;
+    uniqueNodes.push(node);
+  }
+  return uniqueNodes;
 }
 
 export type TransformFunction = (value: any, ...args: any[]) => any;

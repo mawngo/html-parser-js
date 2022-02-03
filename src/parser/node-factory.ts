@@ -25,6 +25,11 @@ export class CheerioNode implements Node {
     return this.el.attr(name) ?? null;
   }
 
+  parent(): Node {
+    const parent = this.el.parent();
+    return new CheerioNode(parent);
+  }
+
   find(selector: string): Node[] {
     const elements = this.el.find(selector);
     if (elements.length === 0) return [];
@@ -51,5 +56,10 @@ export class CheerioNode implements Node {
 
   outerHTML(): string {
     return this.el.toString();
+  }
+
+  is(node: Node): boolean {
+    if (!(node instanceof CheerioNode)) throw new Error("Operation not supported. target node is not CheerioNode");
+    return this.el.is(node.el);
   }
 }
