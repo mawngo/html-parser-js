@@ -33,7 +33,7 @@ export function parseDate(value: any, options: DateParseOptions = {}): Dayjs | D
 
   if (isSupported) {
     const date = dayjs(value, options.parse);
-    if (!date || !date.isValid()) return null;
+    if (!date || !date.isValid()) return def;
     if (format === "iso") return date.toISOString();
     if (format === "dayjs") return date;
     if (format === "date") return date.toDate();
