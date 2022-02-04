@@ -174,20 +174,28 @@ describe("Date engine", () => {
     expect(await parser.parseHtml("<h1>nanaha</h1>", {
       selector: "h1",
       date: true,
-      default: new Date("2020-03-01")
-    })).toEqual(new Date("2020-03-01"));
+      default: new Date("2020-03-01"),
+      format: "YYYY/MM/DD"
+    })).toEqual("2020/03/01");
 
     expect(await parser.parseHtml("<h1>nanaha</h1>", {
       selector: "h1",
       date: true,
       default: "2020-03-01"
-    })).toEqual("2020-03-01");
+    })).toEqual(new Date("2020-03-01T00:00:00").toISOString());
 
     expect(await parser.parseHtml("<h1>nanaha</h1>", {
       selector: "h1",
       date: true,
       default: "Invalid date"
-    })).toEqual("Invalid date");
+    })).toEqual(null);
+
+    expect(await parser.parseHtml("<h1>nanaha</h1>", {
+      selector: "h1",
+      date: true,
+      default: 1577840461000,
+      format: "date"
+    })).toEqual(new Date("2020-01-01T01:01:01.000Z"));
   });
 
   it("should parse multi format", async () => {

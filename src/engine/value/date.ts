@@ -6,10 +6,11 @@ import dayjs, { Dayjs } from "dayjs";
 
 dayjs.extend(customParseFormat);
 
+// Date format: https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
 interface DateParseOptions {
   parse?: string | string[];
   format?: "iso" | "date" | "dayjs" | "timestamp" | string;
-  default?: string | Date;
+  default?: string | Date | number;
 }
 
 export interface DateSelector extends ValueSelector, DateParseOptions {
@@ -27,20 +28,25 @@ export class DateParserEngine extends ValueParserEngine<DateSelector> {
 }
 
 export function parseDate(value: any, options: DateParseOptions = {}): Dayjs | Date | string | number | null {
-  const def = options.default ?? null;
   const format = options.format || "iso";
+  const def = formatDate(options.default ? dayjs(options.default) : null, format);
   const isSupported = typeof value === "number" || typeof value === "string" || value instanceof Date || dayjs.isDayjs(value);
 
   if (isSupported) {
     const date = dayjs(value, options.parse);
     if (!date || !date.isValid()) return def;
-    if (format === "iso") return date.toISOString();
-    if (format === "dayjs") return date;
-    if (format === "date") return date.toDate();
-    if (format === "timestamp") return date.toDate().getTime();
-    return date.format(format);
+    return formatDate(date, format);
   }
   return def;
+}
+
+function formatDate(date: Dayjs | null, format: string): Dayjs | Date | string | number | null {
+  if (!date || !date.isValid()) return null;
+  if (format === "iso") return date.toISOString();
+  if (format === "dayjs") return date;
+  if (format === "date") return date.toDate();
+  if (format === "timestamp") return date.toDate().getTime();
+  return date.format(format);
 }
 
 export function date(
