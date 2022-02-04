@@ -1,8 +1,6 @@
 import {
-  BasicParser,
   BooleanParserEngine,
   BooleanSelector,
-  CheerioNodeFactory,
   CoreParser,
   DateParserEngine,
   DateSelector,
@@ -15,16 +13,16 @@ import {
   StringParserEngine,
   StringSelector
 } from "../src/index.js";
-import { load } from "cheerio";
 import dayjs from "dayjs";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
+import { BasicParser, CheerioNodeFactory } from "../src/parser/basic.js";
 
 
 function createParser<P extends GeneralSelector>(engine: ParserEngine<P>) {
   return new CoreParser({
     engines: [engine],
-    nodeFactory: new CheerioNodeFactory(load(""))
+    nodeFactory: new CheerioNodeFactory()
   });
 }
 
@@ -33,7 +31,7 @@ describe("Core parser", () => {
     expect(() => {
       new CoreParser({
         engines: [],
-        nodeFactory: new CheerioNodeFactory(load(""))
+        nodeFactory: new CheerioNodeFactory()
       });
     }).toThrow();
   });

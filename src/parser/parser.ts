@@ -1,37 +1,10 @@
 import { NumberParserEngine, NumberSelector } from "../engine/value/number.js";
-import { ObjectParserEngine, ObjectSelector } from "../engine/object.js";
-import { DefaultParserEngine, DefaultSelector } from "../engine/value/string.js";
-import { CoreParser, CoreParserOptions } from "./base.js";
-import { CheerioNodeFactory } from "./node-factory.js";
-import { load } from "cheerio";
+import { ObjectSelector } from "../engine/object.js";
+import { DefaultSelector } from "../engine/value/string.js";
 import { BooleanParserEngine, BooleanSelector } from "../engine/value/boolean.js";
-import { GeneralSelector, ParserEngine, TransformFunction } from "../engine/base.js";
+import { GeneralSelector } from "../engine/base.js";
 import { DateParserEngine, DateSelector } from "../engine/value/date.js";
-
-type BasicSupportedType<P extends GeneralSelector> =
-  | ObjectSelector<BasicSupportedType<P>>
-  | DefaultSelector
-  | P
-
-export interface ParserOptions<P extends GeneralSelector> extends CoreParserOptions<P> {
-  objTransforms: {
-    [key: string]: TransformFunction
-  };
-}
-
-export class BasicParser<P extends GeneralSelector = DefaultSelector> extends CoreParser<BasicSupportedType<P>> {
-  constructor(options: Partial<ParserOptions<BasicSupportedType<P>>> = {}) {
-    options.engines = [
-      ...options.engines || [],
-      new ObjectParserEngine<BasicSupportedType<P>>(),
-      new DefaultParserEngine()
-    ];
-    super({
-      nodeFactory: new CheerioNodeFactory(load("")),
-      ...options as Partial<ParserOptions<BasicSupportedType<P>>> & { engines: ParserEngine<P>[] }
-    });
-  }
-}
+import { BasicParser, ParserOptions } from "./basic.js";
 
 type SupportedType<P extends GeneralSelector> =
   | ObjectSelector<SupportedType<P>>
@@ -49,9 +22,6 @@ export class Parser<P extends GeneralSelector = DefaultSelector> extends BasicPa
       new BooleanParserEngine(),
       new DateParserEngine()
     ];
-    super({
-      nodeFactory: new CheerioNodeFactory(load("")),
-      ...options
-    });
+    super({ ...options });
   }
 }

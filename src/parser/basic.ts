@@ -1,16 +1,13 @@
-import { Cheerio, CheerioAPI } from "cheerio";
+import { Cheerio, load } from "cheerio";
 import { Node as CheerioNodeElement } from "domhandler/lib/node.js";
-import { Node, NodeFactory } from "../engine/base.js";
+import { GeneralSelector, Node, NodeFactory, ParserEngine, TransformFunction } from "../engine/base.js";
+import { ObjectParserEngine, ObjectSelector } from "../engine/object.js";
+import { DefaultParserEngine, DefaultSelector } from "../engine/value/string.js";
+import { CoreParser, CoreParserOptions } from "./base.js";
 
 export class CheerioNodeFactory implements NodeFactory {
-  private readonly $: CheerioAPI;
-
-  constructor($: CheerioAPI) {
-    this.$ = $;
-  }
-
   loadHtml(html: string): Node {
-    return new CheerioNode(this.$.load(html).root());
+    return new CheerioNode(load(html).root());
   }
 }
 
@@ -61,5 +58,30 @@ export class CheerioNode implements Node {
   is(node: Node): boolean {
     if (!(node instanceof CheerioNode)) throw new Error("Operation not supported. target node is not CheerioNode");
     return this.el.is(node.el);
+  }
+}
+
+type BasicSupportedType<P extends GeneralSelector> =
+  | ObjectSelector<BasicSupportedType<P>>
+  | DefaultSelector
+  | P
+
+export interface ParserOptions<P extends GeneralSelector> extends CoreParserOptions<P> {
+  objTransforms: {
+    [key: string]: TransformFunction
+  };
+}
+
+export class BasicParser<P extends GeneralSelector = DefaultSelector> extends CoreParser<BasicSupportedType<P>> {
+  constructor(options: Partial<ParserOptions<BasicSupportedType<P>>> = {}) {
+    options.engines = [
+      ...options.engines || [],
+      new ObjectParserEngine<BasicSupportedType<P>>(),
+      new DefaultParserEngine()
+    ];
+    super({
+      nodeFactory: new CheerioNodeFactory(),
+      ...options as Partial<ParserOptions<BasicSupportedType<P>>> & { engines: ParserEngine<P>[] }
+    });
   }
 }
