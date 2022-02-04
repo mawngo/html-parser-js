@@ -14,8 +14,10 @@ describe("parseBoolean", () => {
     expect(parseBoolean(null)).toEqual(null);
     expect(parseBoolean(undefined)).toEqual(null);
     expect(parseBoolean({})).toEqual(null);
+
     expect(parseBoolean({}, { default: true })).toEqual(true);
     expect(parseBoolean(() => "", { default: true })).toEqual(true);
+    expect(parseBoolean(null, { default: true })).toEqual(true);
   });
 
   it("should parse boolean", () => {

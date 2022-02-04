@@ -254,6 +254,15 @@ describe("Object engine", () => {
   });
 
   const parser = new BasicParser();
+  it("should skip if object option is false", async () => {
+    expect(await parser.parseHtml("<h1>Hello</h1><h1>World</h1>", {
+      selector: {
+        h1: ["h1"]
+      },
+      object: false
+    })).toEqual(null);
+  });
+
   it("should parse", async () => {
     expect(await parser.parseHtml("<h1>Hello</h1><h1>World</h1>", {
       selector: {

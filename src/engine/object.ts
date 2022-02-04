@@ -17,6 +17,7 @@ type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
 export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelector<{ [key: string]: ObjectSelectorSupportedSelectors<S> }> {
   selector: { [key: string]: ObjectSelectorSupportedSelectors<S> };
   objTransforms?: (TransformFunction | string)[];
+  object?: boolean;
 }
 
 interface ObjectParserEngineOptions<P extends GeneralSelector> {

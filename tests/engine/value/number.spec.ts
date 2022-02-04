@@ -10,8 +10,10 @@ describe("parseNumber", () => {
     expect(parseNumber({})).toEqual(null);
     expect(parseNumber(null)).toEqual(null);
     expect(parseNumber(undefined)).toEqual(null);
+
     expect(parseNumber({}, { default: 1 })).toEqual(1);
     expect(parseNumber(() => "", { default: 1 })).toEqual(1);
+    expect(parseNumber(null, { default: 1 })).toEqual(1);
   });
 
   it("should parse number", () => {

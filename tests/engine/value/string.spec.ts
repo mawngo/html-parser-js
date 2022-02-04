@@ -6,8 +6,10 @@ describe("parseString", () => {
     expect(parseString({})).toEqual(null);
     expect(parseString(null)).toEqual(null);
     expect(parseString(undefined)).toEqual(null);
+
     expect(parseString({}, { default: "1" })).toEqual("1");
     expect(parseString(() => "", { default: "1" })).toEqual("1");
+    expect(parseString(null, { default: "1" })).toEqual("1");
   });
 
   it("should parse simple type", () => {
@@ -24,6 +26,7 @@ describe("parseString", () => {
   });
 
   it("should return first match or default", () => {
+    expect(parseString(null, { match: /foo/ })).toEqual(null);
     expect(parseString("foo bar foo", { match: "foo" })).toEqual("foo");
     expect(parseString("foo bar foo", { match: /foo/ })).toEqual("foo");
     expect(parseString("bar bar bar", { match: "foo" })).toEqual(null);

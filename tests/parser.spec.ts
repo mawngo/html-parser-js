@@ -140,6 +140,17 @@ describe("Default Parser", () => {
     })).toEqual(["Intentionally Static: This page will never change"]);
   });
 
+  it("should reject invalid selector", () => {
+    const parser = new Parser();
+    expect(parser.parseHtml(html, { selector: "" })).rejects.toThrow();
+    expect(parser.parseHtml(html, { selector: [""] })).rejects.toThrow();
+    expect(parser.parseHtml(html, { selector: "@text" })).rejects.toThrow();
+
+    // invalid selector for auto scoping
+    expect(parser.parseHtml(html, { selector: [""], scope: [] })).rejects.toThrow();
+    expect(parser.parseHtml(html, { selector: "", scope: [] })).rejects.toThrow();
+  });
+
   it("should throw if scope is empty array or array with empty string when using object selector", () => {
     const parser = new Parser();
     expect(parser.parseHtml(html, { selector: { h1: "h1" }, scope: [] })).rejects.toThrow();

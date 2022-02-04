@@ -47,7 +47,6 @@ export function parseString(value: any, options: StringParseOptions = {}): strin
   const def = options.default ?? null;
   if (typeof value === "string") {
     if (options.defaultIfEmpty && value === "") return options.defaultIfEmpty;
-    if (value == null) return def;
     return matchIfRequired(value, options);
   }
 
@@ -55,8 +54,7 @@ export function parseString(value: any, options: StringParseOptions = {}): strin
   return def;
 }
 
-function matchIfRequired(value: string | null, options?: StringParseOptions): string | null {
-  if (value == null) return value;
+function matchIfRequired(value: string, options?: StringParseOptions): string | null {
   if (!options?.match) return value;
   const regex = new RegExp(options?.match);
   return regex.exec(value)?.[0] ?? options?.defaultIfNoMatch ?? null;

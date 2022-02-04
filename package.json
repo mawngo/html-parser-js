@@ -1,6 +1,6 @@
 {
   "name": "@lanatools/html-parser",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Parse html to json object using predefined json schema.",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
