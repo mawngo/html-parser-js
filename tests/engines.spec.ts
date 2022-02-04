@@ -105,7 +105,7 @@ describe("Number engine", () => {
       number: true,
       default: 1.5,
       int: true
-    })).toEqual([1, 2, 1.5]);
+    })).toEqual([1, 2, 2]);
 
     expect(await parser.parseHtml(html, {
       selector: ["h1"],
@@ -113,7 +113,7 @@ describe("Number engine", () => {
       default: 1.5,
       int: true,
       roundMode: "floor"
-    })).toEqual([1, 1, 1.5]);
+    })).toEqual([1, 1, 1]);
   });
 });
 
