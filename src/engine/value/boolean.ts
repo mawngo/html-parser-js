@@ -49,13 +49,17 @@ export function parseBoolean(value: any, options: BooleanParseOptions = {}): boo
 
 export function bool(
   selector: SimpleSelector,
-  opts?: SimpleSelector | BooleanParseOptions & SelectorOptions
+  opts?: SimpleSelector | BooleanParseOptions & SelectorOptions,
+  truthy?: string | string[],
+  falsy?: string | string[]
 ): BooleanSelector {
   const [scope, options] = extractScope(opts);
   return {
     boolean: true,
     selector,
     scope,
+    truthy,
+    falsy,
     ...options
   };
 }
