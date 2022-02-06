@@ -128,9 +128,11 @@ describe("transforms: def", () => {
     expect(transforms.def(1, "hello")).toEqual(1);
     expect(transforms.def(true, "hello")).toEqual(true);
     expect(transforms.def("", "hello")).toEqual("");
+    expect(transforms.def("unknown", "hello", null, "un", "unknown")).toEqual("hello");
 
     expect(transforms.empty(null)).toEqual("");
     expect(transforms.empty(" ")).toEqual("");
+    expect(transforms.empty("unknown", "blank", "unknown")).toEqual("");
   });
 
   it("should work with mode", () => {
@@ -204,5 +206,50 @@ describe("transforms: unique", () => {
   it("should unique array", () => {
     expect(transforms.unique(["hi", null, "hi", null])).toEqual(["hi", null]);
     expect(transforms.unique(["hi", "hi", "hi"])).toEqual(["hi"]);
+  });
+});
+
+describe("transforms: lowercase", () => {
+  it("should work with any value", () => {
+    expect(transforms.lowercase(null)).toEqual(null);
+    expect(transforms.lowercase(1)).toEqual(1);
+    expect(transforms.lowercase("1")).toEqual("1");
+    expect(transforms.lowercase("Hello WoRLd")).toEqual("hello world");
+  });
+
+  it("should work with array and object", () => {
+    expect(transforms.lowercase(["HellO", null, "World"])).toEqual(["hello", null, "world"]);
+    expect(transforms.lowercase({ hello: "Hello", World: "World" })).toEqual({ hello: "hello", World: "world" });
+  });
+});
+
+describe("transforms: uppercase", () => {
+  it("should work with any value", () => {
+    expect(transforms.uppercase(null)).toEqual(null);
+    expect(transforms.uppercase(1)).toEqual(1);
+    expect(transforms.uppercase("1")).toEqual("1");
+    expect(transforms.uppercase("Hello WoRLd")).toEqual("HELLO WORLD");
+  });
+
+  it("should work with array and object", () => {
+    expect(transforms.uppercase(["HellO", null, "World"])).toEqual(["HELLO", null, "WORLD"]);
+    expect(transforms.uppercase({ hello: "Hello", World: "World" })).toEqual({ hello: "HELLO", World: "WORLD" });
+  });
+});
+
+describe("transforms: title", () => {
+  it("should work with any value", () => {
+    expect(transforms.title(null)).toEqual(null);
+    expect(transforms.title(1)).toEqual(1);
+    expect(transforms.title("1")).toEqual("1");
+    expect(transforms.title("Hello WoRLd")).toEqual("Hello World");
+  });
+
+  it("should work with array and object", () => {
+    expect(transforms.title(["HellO", null, "World"])).toEqual(["Hello", null, "World"]);
+    expect(transforms.title({ hello: "Hello world", World: "World" })).toEqual({
+      hello: "Hello World",
+      World: "World"
+    });
   });
 });

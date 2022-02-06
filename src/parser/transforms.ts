@@ -51,15 +51,16 @@ export const transforms = {
     return val;
   },
 
-  empty(val: any, mode: "blank" | "empty" | "falsy" | null = "blank"): any {
-    return transforms.def(val, "", mode);
+  empty(val: any, mode: "blank" | "empty" | "falsy" | null = "blank", ...values: any[]): any {
+    return transforms.def(val, "", mode, ...values);
   },
 
-  def<T, D>(val: T | null, defaultValue: D, mode: "blank" | "empty" | "falsy" | null = null): T | D {
+  def<T, D>(val: T | null, defaultValue: D, mode: "blank" | "empty" | "falsy" | null = null, ...additionalValuesToDefault: any[]): T | D {
     if (val == null) return defaultValue;
 
     return applyWithObjectAndArraySupport(val, (input) => {
       if (input == null) return defaultValue;
+      if (additionalValuesToDefault.includes(input)) return defaultValue;
       if (mode === "falsy" && !input) return defaultValue;
 
       if (typeof input === "string") {
@@ -122,6 +123,27 @@ export const transforms = {
     if (val == null) return null;
     if (Array.isArray(val)) return [...new Set(val)];
     return val;
+  },
+
+  lowercase(val: any): any | null {
+    return applyWithObjectAndArraySupport(val, (input) => {
+      if (typeof input !== "string") return input;
+      return input.toLowerCase();
+    });
+  },
+
+  uppercase(val: any): any | null {
+    return applyWithObjectAndArraySupport(val, (input) => {
+      if (typeof input !== "string") return input;
+      return input.toUpperCase();
+    });
+  },
+
+  title(val: any): any | null {
+    return applyWithObjectAndArraySupport(val, (input) => {
+      if (typeof input !== "string") return input;
+      return input.split(" ").map(w => w.charAt(0).toUpperCase() + w.substring(1).toLowerCase()).join(" ");
+    });
   }
 };
 
