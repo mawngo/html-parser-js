@@ -4,6 +4,7 @@ import { GeneralSelector, Node, NodeFactory, ParserEngine, TransformFunction } f
 import { ObjectParserEngine, ObjectSelector } from "../engine/object.js";
 import { DefaultParserEngine, DefaultSelector } from "../engine/value/string.js";
 import { CoreParser, CoreParserOptions } from "./base.js";
+import { transforms } from "./transforms.js";
 
 export class CheerioNodeFactory implements NodeFactory {
   loadHtml(html: string): Node {
@@ -74,6 +75,14 @@ export interface ParserOptions<P extends GeneralSelector> extends CoreParserOpti
 
 export class BasicParser<P extends GeneralSelector = DefaultSelector> extends CoreParser<BasicSupportedType<P>> {
   constructor(options: Partial<ParserOptions<BasicSupportedType<P>>> = {}) {
+    options.transforms = {
+      ...transforms,
+      ...options.transforms
+    };
+    options.objTransforms = {
+      ...transforms,
+      ...options.objTransforms
+    };
     options.engines = [
       ...options.engines || [],
       new ObjectParserEngine<BasicSupportedType<P>>(),
