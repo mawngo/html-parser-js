@@ -200,6 +200,7 @@ interface ObjectSelector {
   trim?: boolean; // apply trim for all sub selector (only if sub selector trim property is not specified)
   transforms?: (string | TransformFunction)[]; // apply transforms for all sub selector (apply after sub selector transform)
   objTransforms?: (string | TransformFunction)[]; // apply transform to the object result;
+  flat?: boolean; // flatten the object, merge its keys with its parent keys
 }
 ```
 

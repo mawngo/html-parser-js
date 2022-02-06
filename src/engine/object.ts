@@ -18,6 +18,7 @@ export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelect
   selector: { [key: string]: ObjectSelectorSupportedSelectors<S> };
   objTransforms?: (TransformFunction | string)[];
   object?: boolean;
+  flat?: boolean;
 }
 
 interface ObjectParserEngineOptions<P extends GeneralSelector> {
@@ -49,10 +50,18 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
 
   async parseNode<T>(node: Node, context: ObjectSelector<P>): Promise<T | null> {
     const parsed = {};
+    const overwrite = {};
     for (const [key, value] of Object.entries(context.selector)) {
-      parsed[key] = await this.parseSelectorValue(node, value, context);
+      const selector = { ...unwrapSelector(value) } as P;
+      const parsedValue = await this.parseSelectorValue(node, selector, context);
+
+      if ((selector as ObjectSelector<P>).flat && isObject(parsedValue)) {
+        Object.assign(overwrite, parsedValue);
+        continue;
+      }
+      parsed[key] = parsedValue;
     }
-    return this.applyTransforms(parsed, context) as T;
+    return this.applyTransforms({ ...parsed, ...overwrite }, context) as T;
   }
 
   private applyTransforms(value: any, context: ObjectSelector<P>): any | null {
@@ -61,8 +70,7 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     return transforms.reduce((val: any, transform) => transform(val), value);
   }
 
-  private parseSelectorValue(node: Node, value: ObjectSelectorSupportedSelectors<P> | SimpleSelector, context: ObjectSelector<GeneralSelector>): Promise<any | null> {
-    const selector = { ...unwrapSelector(value) } as P;
+  private parseSelectorValue(node: Node, selector: P, context: ObjectSelector<GeneralSelector>): Promise<any | null> {
     if (context.trim != null && selector.trim == null) {
       selector.trim = context.trim;
     }
@@ -79,6 +87,12 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
   }
 }
 
+function isObject(value: any | null): boolean {
+  return value != null
+    && typeof value === "object"
+    && !Array.isArray(value.selector);
+}
+
 export function obj<S extends GeneralSelector & ObjectSelector<S>>(
   selector: { [key: string]: ObjectSelectorSupportedSelectors<S> },
   opts?: SimpleSelector | SelectorOptions
@@ -87,6 +101,19 @@ export function obj<S extends GeneralSelector & ObjectSelector<S>>(
   return {
     selector,
     scope,
+    ...options
+  };
+}
+
+export function flat<S extends GeneralSelector & ObjectSelector<S>>(
+  selector: { [key: string]: ObjectSelectorSupportedSelectors<S> },
+  opts?: SimpleSelector | SelectorOptions
+): ObjectSelector<S> {
+  const [scope, options] = extractScope(opts);
+  return {
+    selector,
+    scope,
+    flat: true,
     ...options
   };
 }

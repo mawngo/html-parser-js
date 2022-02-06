@@ -29,7 +29,13 @@ describe("Default Parser", () => {
             href: "a@href",
             html: "a@html",
             innerHTML: "a@innerHTML",
-            outerHTML: "a@outerHTML"
+            outerHTML: "a@outerHTML",
+            flattened: {
+              selector: {
+                flattenedKey: "a@href"
+              },
+              flat: true
+            }
           },
           scope: "p:nth-of-type(4)"
         },
@@ -52,7 +58,8 @@ describe("Default Parser", () => {
       href: "https://loripsum.net/",
       html: "Fortemne possumus dicere eundem illum Torquatum?",
       innerHTML: "Fortemne possumus dicere eundem illum Torquatum?",
-      outerHTML: "<a href=\"https://loripsum.net/\" target=\"_blank\">Fortemne possumus dicere eundem illum Torquatum?</a>"
+      outerHTML: "<a href=\"https://loripsum.net/\" target=\"_blank\">Fortemne possumus dicere eundem illum Torquatum?</a>",
+      flattenedKey: "https://loripsum.net/"
     });
   });
 

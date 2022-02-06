@@ -247,6 +247,11 @@ describe("Date engine", () => {
 
 
 describe("Object engine", () => {
+  let html = "";
+  beforeAll(async () => {
+    html = await readFile(resolve("tests/assets/static.html"), "utf8");
+  });
+
   it("should require other engines", () => {
     const engine = new ObjectParserEngine();
     expect(() => engine.config({ engines: [] })).toThrow();
@@ -293,7 +298,6 @@ describe("Object engine", () => {
       }
     });
 
-    const html = await readFile(resolve("tests/assets/static.html"), "utf8");
     expect(await parser.parseHtml(html, {
       selector: {
         result: {
@@ -315,5 +319,24 @@ describe("Object engine", () => {
         { li: ["Atque hoc loco similitudines eas, quibus illi uti solent, dissimillimas proferebas.", "Atqui, inquam, Cato, si istud optinueris, traducas me ad te totum licebit."] }
       ]
     });
+  });
+
+  it("should flatten", async () => {
+    expect(await parser.parseHtml(html, {
+      selector: {
+        result: {
+          selector: {
+            nested: {
+              selector: {
+                li: ["li:nth-child(odd)"]
+              },
+              flat: true
+            }
+          },
+          scope: "ul",
+          flat: true
+        }
+      }
+    })).toEqual({ li: ["Tuo vero id quidem, inquam, arbitratu."] });
   });
 });
