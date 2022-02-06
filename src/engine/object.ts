@@ -9,13 +9,12 @@ import {
 } from "./base.js";
 import { buildTransformList, extractScope, isObject, unwrapSelector } from "./common.js";
 
-type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
-  ObjectSelector<S>
-  | SimpleSelector
-  | S;
+type ObjectSelectorMap<S extends GeneralSelector> = {
+  [key: string]: SimpleSelector | S | ObjectSelector<S>
+}
 
-export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelector<{ [key: string]: ObjectSelectorSupportedSelectors<S> }> {
-  selector: { [key: string]: ObjectSelectorSupportedSelectors<S> };
+export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelector<ObjectSelectorMap<S>> {
+  selector: ObjectSelectorMap<S>;
   objTransforms?: (TransformFunction | string)[];
   object?: boolean;
   flat?: boolean;
@@ -92,8 +91,8 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
   }
 }
 
-export function obj<S extends GeneralSelector & ObjectSelector<S>>(
-  selector: { [key: string]: ObjectSelectorSupportedSelectors<S> },
+export function obj<S extends GeneralSelector>(
+  selector: ObjectSelectorMap<S>,
   opts?: SimpleSelector | SelectorOptions
 ): ObjectSelector<S> {
   const [scope, options] = extractScope(opts);
@@ -104,8 +103,8 @@ export function obj<S extends GeneralSelector & ObjectSelector<S>>(
   };
 }
 
-export function flat<S extends GeneralSelector & ObjectSelector<S>>(
-  selector: { [key: string]: ObjectSelectorSupportedSelectors<S> },
+export function flat<S extends GeneralSelector>(
+  selector: ObjectSelectorMap<S>,
   opts?: SimpleSelector | SelectorOptions
 ): ObjectSelector<S> {
   const [scope, options] = extractScope(opts);
