@@ -10,7 +10,6 @@ export const transforms = {
   },
 
   match(val: any, token: string, flag = "g", defaultIfNoMatch: string | null = null): string | null {
-    if (val == null) return null;
     return applyWithObjectAndArraySupport(val, (input) => {
       if (typeof input !== "string") return input;
 
@@ -20,7 +19,6 @@ export const transforms = {
   },
 
   matchAll(val: any, token: string, flag = "g"): string[] | null {
-    if (val == null) return null;
     return applyWithObjectAndArraySupport(val, (input) => {
       if (typeof input !== "string") return input;
 
@@ -36,7 +34,6 @@ export const transforms = {
   },
 
   split(val: any, token = ",", flag = "g"): string[] | null {
-    if (val == null) return null;
     return applyWithObjectAndArraySupport(val, (input) => {
       if (typeof input !== "string") return input;
       const regex = new RegExp(token, flag);
