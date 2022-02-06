@@ -1,4 +1,4 @@
-import { buildTransformList, extractScope, parseSelectorString, wrapArray } from "../../src/engine/common.js";
+import { buildTransformList, extractScope, isObject, parseSelectorString, wrapArray } from "../../src/engine/common.js";
 
 describe("parseSelectorString", () => {
   const selectors = [
@@ -169,5 +169,26 @@ describe("buildTransformList", () => {
 
     const afterTransform = transFormList.reduce((val: any, transform) => transform(val), "raw value");
     expect(afterTransform).toEqual("raw value one two four.");
+  });
+});
+
+describe("isObject", () => {
+  it("should return true for object", () => {
+    expect(isObject("object")).toEqual(false);
+    expect(isObject(1)).toEqual(false);
+    expect(isObject({})).toEqual(true);
+    expect(isObject({ 1: 2 })).toEqual(true);
+    expect(isObject({ "1": 2 })).toEqual(true);
+  });
+
+  it("should return false for array", () => {
+    expect(isObject([])).toEqual(false);
+    expect(isObject(["1"])).toEqual(false);
+    expect(isObject([{ "1": 2 }])).toEqual(false);
+  });
+
+  it("should return false for null", () => {
+    expect(isObject(null)).toEqual(false);
+    expect(isObject(undefined)).toEqual(false);
   });
 });

@@ -7,7 +7,7 @@ import {
   SimpleSelector,
   TransformFunction
 } from "./base.js";
-import { buildTransformList, extractScope, unwrapSelector } from "./common.js";
+import { buildTransformList, extractScope, isObject, unwrapSelector } from "./common.js";
 
 type ObjectSelectorSupportedSelectors<S extends GeneralSelector> =
   ObjectSelector<S>
@@ -85,12 +85,6 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     }
     return Promise.resolve(null);
   }
-}
-
-function isObject(value: any | null): boolean {
-  return value != null
-    && typeof value === "object"
-    && !Array.isArray(value.selector);
 }
 
 export function obj<S extends GeneralSelector & ObjectSelector<S>>(

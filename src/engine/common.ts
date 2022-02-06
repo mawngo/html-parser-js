@@ -60,3 +60,9 @@ export function buildTransformList(
   }
   return transforms;
 }
+
+export function isObject(value: any | null): boolean {
+  return value != null
+    && typeof value === "object"
+    && !Array.isArray(value);
+}
