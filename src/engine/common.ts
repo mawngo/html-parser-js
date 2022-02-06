@@ -26,7 +26,7 @@ export function unwrapSelector<T>(selector: GeneralSelector<T> | SimpleSelector)
       selector
     };
   }
-  return selector;
+  return { ...selector };
 }
 
 export function extractScope<T extends SelectorOptions>(option?: SimpleSelector | T): [SimpleSelector, T | SelectorOptions] {

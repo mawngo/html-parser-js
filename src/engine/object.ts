@@ -52,7 +52,7 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
     const parsed = {};
     const overwrite = {};
     for (const [key, value] of Object.entries(context.selector)) {
-      const selector = { ...unwrapSelector(value) } as P;
+      const selector = unwrapSelector(value) as P;
       const parsedValue = await this.parseSelectorValue(node, selector, context);
 
       if ((selector as ObjectSelector<P>).flat && isObject(parsedValue)) {
