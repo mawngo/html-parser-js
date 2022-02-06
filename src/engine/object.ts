@@ -79,7 +79,7 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
   }
 }
 
-export function obj<S extends GeneralSelector>(
+export function obj<S extends GeneralSelector & ObjectSelector<S>>(
   selector: { [key: string]: ObjectSelectorSupportedSelectors<S> },
   opts?: SimpleSelector | SelectorOptions
 ): ObjectSelector<S> {

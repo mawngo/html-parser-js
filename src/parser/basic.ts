@@ -61,7 +61,7 @@ export class CheerioNode implements Node {
   }
 }
 
-type BasicSupportedType<P extends GeneralSelector> =
+export type BasicSupportedType<P extends GeneralSelector = DefaultSelector> =
   | ObjectSelector<BasicSupportedType<P>>
   | DefaultSelector
   | P

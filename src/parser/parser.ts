@@ -6,7 +6,7 @@ import { GeneralSelector } from "../engine/base.js";
 import { DateParserEngine, DateSelector } from "../engine/value/date.js";
 import { BasicParser, ParserOptions } from "./basic.js";
 
-type SupportedType<P extends GeneralSelector> =
+export type SupportedType<P extends GeneralSelector = DefaultSelector> =
   | ObjectSelector<SupportedType<P>>
   | NumberSelector
   | BooleanSelector
