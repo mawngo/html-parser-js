@@ -74,3 +74,21 @@ export function str(
     ...options
   };
 }
+
+export function match(
+  regex: string | RegExp,
+  selector: SimpleSelector,
+  opts?: SimpleSelector | StringParseOptions & SelectorOptions,
+  defaultValue: string | null = null
+): StringSelector {
+  const [scope, options] = extractScope(opts);
+  return {
+    string: true,
+    selector,
+    scope,
+    match: regex,
+    default: defaultValue,
+    defaultIfNoMatch: defaultValue,
+    ...options
+  };
+}
