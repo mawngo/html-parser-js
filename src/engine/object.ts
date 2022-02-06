@@ -49,13 +49,18 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
   }
 
   async parseNode<T>(node: Node, context: ObjectSelector<P>): Promise<T | null> {
+    const promises: Promise<[any, string, ObjectSelector<P>]>[] = Object.entries(context.selector)
+      .map(([key, value]) => {
+        const selector = unwrapSelector(value) as P;
+        return this.parseSelectorValue(node, selector, context)
+          .then(parsedValue => [parsedValue, key, selector]); // add key value to process later (maintaining keys order)
+      });
+
     const parsed = {};
     const overwrite = {};
-    for (const [key, value] of Object.entries(context.selector)) {
-      const selector = unwrapSelector(value) as P;
-      const parsedValue = await this.parseSelectorValue(node, selector, context);
-
-      if ((selector as ObjectSelector<P>).flat && isObject(parsedValue)) {
+    const parseResults = await Promise.all(promises);
+    for (const [parsedValue, key, selector] of parseResults) {
+      if (selector.flat && isObject(parsedValue)) {
         Object.assign(overwrite, parsedValue);
         continue;
       }
