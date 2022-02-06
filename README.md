@@ -204,6 +204,10 @@ interface ObjectSelector {
 }
 ```
 
+- transforms will be applied on all objects fields, and run after fields transform
+- objTransforms will be applied on the object after all of its fields resolved
+- if flat is true, the parser will merge current object keys with its parent (do nothing if specified in root schema)
+
 #### BooleanParserEngine
 
 Parse value into boolean
@@ -313,9 +317,11 @@ parser.parseHtml(html,
 List of available helpers
 
 - ```obj(selector: { [key: string]: GeneralSelector }, scopeOrOptions?): ObjectSelector```
+- ```flat(selector: { [key: string]: GeneralSelector }, scopeOrOptions?): ObjectSelector & { flat: true }```
 - ```num(selector: string | string[], scopeOrOptions?, default?): NumberSelector```
 - ```int(selector: string | string[], scopeOrOptions?, default?): NumberSelector```
 - ```str(selector: string | string[], scopeOrOptions?, default?): StringSelector```
+- ```match(regex: string | RegExp, selector: string | string[], scopeOrOptions?, default?): StringSelector & { match: /regex/ }```
 - ```bool(selector: string | string[], scopeOrOptions?, truthy?, falsy?): BooleanSelector```
 - ```date(selector: string | string[], scopeOrOptions?, parse?, format?, default?): DateSelector```
 
