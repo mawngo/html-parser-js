@@ -332,6 +332,41 @@ List of available helpers
 - ```bool(selector: string | string[], scopeOrOptions?, truthy?, falsy?): BooleanSelector```
 - ```date(selector: string | string[], scopeOrOptions?, parse?, format?, default?): DateSelector```
 
+### Built-in transforms
+
+Almost all built-in transforms can be applied on single value, array and object. For array and object, the transform
+will auto applied to each item (in array) or field (in object)
+
+Marked built-in transforms (* at the start) only support some specific type. They will return the input value if type is
+not supported
+
+- ```replace(input, match, replaceBy)```: replace matched in string (match is treated as regex).
+- ```match(input, token, flag?, defaultIfNoMatch?)```: match string (match is treated as regex), return matched value.
+- ```matchAll(input, token, flag?, defaultIfNoMatch?)```: like ```match``` but return all matched value as array (empty
+  array if not match).
+- ```split(input, token, flag?)```: split string by token (token is treated as regex). return array of string.
+- ```lowercase(input)```:  convert input to lowercase.
+- ```uppercase(input)```:  convert input to uppercase.
+- ```title(input)```:  convert input to title (upper case first letter of each word).
+
+- ```def(input, default, mode?: "blank", values?: [])```: return default if input is in values, or input is blank |
+  empty | falsy | null (based on mode)
+- ```empty(input, default, mode?: "blank", values?: [])```: like ```def``` but return empty string instead of default
+
+- ```*join(input, glue?)```: join array into string. Only support array or object (join all object values into string).
+- ```*flat(input, depth?)```: flatten array. Only support array.
+- ```*unique(input)```: remove duplicated element in array. Only support array.
+
+- ```wrap(input, key?)```: if key not specified, return array contain input. if key is specified, return object which
+  have 'key' value is input
+- ```*del(input, match)```: return null if value equal to match. For object, remove all key which have value equal to
+  match. For array, remove all item equal to match
+
+- ```str(input)```: convert input to string
+- ```toString(input)```: call ```toString``` on input (basically convert input to string, but without special treatment
+  for array and object). return string
+- ```json(input)```: call ```JSON.stringify``` on input. return json string
+
 ## License
 
 MIT
