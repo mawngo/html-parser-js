@@ -225,6 +225,55 @@ describe("Default Parser", () => {
     })).toEqual("Intentionally Static: This page will never change one four.");
   });
 
+  it("should apply arrTransforms", async () => {
+    const parser = new Parser({
+      transforms: {
+        one(val) {
+          return val?.toString() + " one";
+        }
+      },
+      arrTransforms: {
+        join(val) {
+          if (!Array.isArray(val)) return val;
+          return val.join("-");
+        },
+        err(val) {
+          if (Array.isArray(val)) return val;
+          throw new Error("arrTransforms should not apply on non-array selector");
+        }
+      }
+    });
+
+    expect(await parser.parseHtml<string>(html, {
+      selector: ["h1"],
+      arrTransforms: ["join"]
+    })).toEqual(
+      [
+        "Intentionally Static: This page will never change",
+        "Atque ita re simpliciter primo collocata reliqua subtilius persequentes corporis bona facilem quandam rationem habere censebant;",
+        "Te ipsum, dignissimum maioribus tuis, voluptasne induxit, ut adolescentulus eriperes P."
+      ].join("-")
+    );
+
+    expect(await parser.parseHtml<string>(html, {
+      selector: ["h1"],
+      arrTransforms: ["join"],
+      transforms: ["one"]
+    })).toEqual(
+      [
+        "Intentionally Static: This page will never change one",
+        "Atque ita re simpliciter primo collocata reliqua subtilius persequentes corporis bona facilem quandam rationem habere censebant; one",
+        "Te ipsum, dignissimum maioribus tuis, voluptasne induxit, ut adolescentulus eriperes P. one"
+      ].join("-")
+    );
+
+    expect(await parser.parseHtml<string>(html, {
+      selector: "h1",
+      arrTransforms: ["err"],
+      transforms: ["one"]
+    })).toEqual("Intentionally Static: This page will never change one");
+  });
+
   it("should apply object transform", async () => {
     const parser = new Parser({
       objTransforms: {

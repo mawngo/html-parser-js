@@ -65,10 +65,10 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
       }
       parsed[key] = parsedValue;
     }
-    return this.applyTransforms({ ...parsed, ...overwrite }, context) as T;
+    return this.applyObjTransforms({ ...parsed, ...overwrite }, context) as T;
   }
 
-  private applyTransforms(value: any, context: ObjectSelector<P>): any | null {
+  private applyObjTransforms(value: any, context: ObjectSelector<P>): any | null {
     if (!context.objTransforms || !context.objTransforms.length) return value;
     const transforms = buildTransformList(context.objTransforms, this.options.objTransforms);
     return transforms.reduce((val: any, transform) => transform(val), value);
@@ -82,6 +82,11 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
       selector.transforms = selector.transforms || [];
       // add transform from object to selector transform array. transform from object run last
       selector.transforms = [...selector.transforms, ...context.transforms];
+    }
+    if (context.arrTransforms && context.arrTransforms.length) {
+      selector.arrTransforms = selector.arrTransforms || [];
+      // add arrTransform from object to selector arrTransform array. arrTransform from object run last
+      selector.arrTransforms = [...selector.arrTransforms, ...context.arrTransforms];
     }
     for (const engine of this.options.engines) {
       if (!engine.match(selector)) continue;

@@ -81,6 +81,7 @@ export interface SelectorOptions {
   scope?: SimpleSelector;
   trim?: boolean;
   transforms?: (TransformFunction | string)[];
+  arrTransforms?: (TransformFunction | string)[];
 }
 
 export interface GeneralSelector<T = any> extends SelectorOptions {

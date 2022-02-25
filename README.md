@@ -144,7 +144,8 @@ Parse html
 
 The selector can be a string, or array of single string follow the
 format ```[selector]@[attribute] | [built-in transform]```
-where the ``[selector]`` is a Jquery selector.
+where the ``[selector]`` is a Jquery selector. ```[built-in transform]``` will be shifted to
+the ```transforms?: (string | TransformFunction)[]``` array
 
 ```ts
 import { Parser } from "@lanatools/html-parser"
@@ -167,7 +168,11 @@ engines that passed to engines options. Common selector properties are:
 - ```scope?: string | string []```: scope of selector. transform to ```$(scope).find(selector)```
 - ```trim?: boolean```: trim the value before process. default to ```true```
 - ```transforms?: (string | TransformFunction)[]```: list of transform to apply. transform can be a function that take
-  current value and return another value, or name of ```built-in transforms```
+  current value and return another value, or name of ```built-in transforms```. if applied when the ```selector``` is an
+  array (select all), the transform will be applied on each item in result list
+- ```arrTransforms?: (string | TransformFunction)[]```: list of arrTransform to apply. arrTransform only apply if the
+  selector is array (select all) .arrTransform can be a function that take current value and return another value, or
+  name of ```built-in transforms```
 
 ### Built-in engines
 
@@ -199,12 +204,14 @@ interface ObjectSelector {
   selector: { [key: string]: GeneralSelector };// GeneralSelector can be any supported selector
   trim?: boolean; // apply trim for all sub selector (only if sub selector trim property is not specified)
   transforms?: (string | TransformFunction)[]; // apply transforms for all sub selector (apply after sub selector transform)
+  arrTransforms?: (string | TransformFunction)[]; // apply arrTransforms for all sub selector (apply after sub selector arrTransform, and only if sub selector is array selector)
   objTransforms?: (string | TransformFunction)[]; // apply transform to the object result;
   flat?: boolean; // flatten the object, merge its keys with its parent keys
 }
 ```
 
-- transforms will be applied on all objects fields, and run after fields transform
+- arrTransforms will be applied on all object's array fields, and run after fields arrTransform
+- transforms will be applied on all object's fields, and run after fields transform
 - objTransforms will be applied on the object after all of its fields resolved
 - if flat is true, the parser will merge current object keys with its parent (do nothing if specified in root schema)
 

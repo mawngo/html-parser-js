@@ -17,13 +17,14 @@ export interface CoreParserOptions<P extends GeneralSelector> {
   engines: ParserEngine<P>[];
   nodeFactory: NodeFactory;
   transforms: { [key: string]: TransformFunction };
+  arrTransforms: { [key: string]: TransformFunction };
 }
 
 export class CoreParser<P extends GeneralSelector> {
   protected readonly options: CoreParserOptions<P>;
 
   constructor(options: Partial<CoreParserOptions<P>> & { nodeFactory: NodeFactory, engines: ParserEngine<P>[] }) {
-    this.options = { transforms: {}, ...options };
+    this.options = { transforms: {}, arrTransforms: {}, ...options };
     if (!this.options.engines.length) throw new Error("No engine provided. please provide at least one engine in engines[] option");
     for (const engine of this.options.engines) {
       if (!isConfigurable(engine)) continue;

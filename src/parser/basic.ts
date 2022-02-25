@@ -83,6 +83,10 @@ export class BasicParser<P extends GeneralSelector = DefaultSelector> extends Co
       ...transforms,
       ...options.objTransforms
     };
+    options.arrTransforms = {
+      ...transforms,
+      ...options.arrTransforms
+    };
     options.engines = [
       ...options.engines || [],
       new ObjectParserEngine<BasicSupportedType<P>>(),

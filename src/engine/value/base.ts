@@ -9,10 +9,13 @@ interface ValueParserEngineConfig {
   transforms: {
     [key: string]: TransformFunction
   };
+  arrTransforms: {
+    [key: string]: TransformFunction
+  };
 }
 
 export abstract class ValueParserEngine<P extends ValueSelector> extends ParserEngine<P> implements Configurable<ValueParserEngineConfig> {
-  protected options: ValueParserEngineConfig = { transforms: {} };
+  protected options: ValueParserEngineConfig = { transforms: {}, arrTransforms: {} };
 
   config(options: Partial<ValueParserEngineConfig>) {
     this.options = { ...this.options, ...options };
@@ -33,11 +36,19 @@ export abstract class ValueParserEngine<P extends ValueSelector> extends ParserE
       const attrs: Promise<any>[] = node.find(selector)
         .map(child => this.selectAttr(child, attribute, context))
         .filter(attr => attr != null);
-      return Promise.all(attrs) as Promise<unknown> as Promise<T>;
+      return Promise.all(attrs)
+        .then(attrs => this.applyArrTransforms(attrs, context)) as Promise<unknown> as Promise<T>;
     }
 
     const firstNode = node.first(selector);
     return this.selectAttr(firstNode, attribute, context);
+  }
+
+  private applyArrTransforms(value: any[], context: P): any | [] {
+    if (!Array.isArray(value)) return value;
+    if (!context.arrTransforms || !context.arrTransforms.length) return value;
+    const transforms = buildTransformList(context.arrTransforms, this.options.arrTransforms);
+    return transforms.reduce((val: any, transform) => transform(val), value);
   }
 
   protected selectAttr(node: Node | null, attr: string | undefined, context: P): Promise<any | null> {
