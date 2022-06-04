@@ -1,5 +1,5 @@
 import { Cheerio, load } from "cheerio";
-import { Node as CheerioNodeElement } from "domhandler/lib/node.js";
+import { AnyNode as CheerioNodeElement } from "domhandler/lib/node.js";
 import { GeneralSelector, Node, NodeFactory, ParserEngine, TransformFunction } from "../engine/base.js";
 import { ObjectParserEngine, ObjectSelector } from "../engine/object.js";
 import { DefaultParserEngine, DefaultSelector } from "../engine/value/string.js";
