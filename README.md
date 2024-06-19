@@ -7,7 +7,7 @@ and [scrape-it](https://github.com/IonicaBizau/scrape-it)
 
 ```sh
 # Using npm
-npm install --save @lanatools/html-parser
+npm install --save @mawngo/html-parser
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install --save @lanatools/html-parser
 Scraping using html-parser with axios
 
 ```ts
-import { Parser } from "@lanatools/html-parser";
+import { Parser } from "@mawngo/html-parser";
 import axios from "axios";
 
 const parser = new Parser();
@@ -54,7 +54,7 @@ main();
 Simplify selector schema using helpers
 
 ```ts
-import { num, obj, Parser, str } from "@lanatools/html-parser";
+import { num, obj, Parser, str } from "@mawngo/html-parser";
 import axios from "axios";
 
 const parser = new Parser();
@@ -101,7 +101,7 @@ Create new parser instance
 - ``P`` additional custom selector to support
 
 ```ts
-import { Parser, BasicParser } from "@lanatools/html-parser"
+import { Parser, BasicParser } from "@mawngo/html-parser"
 // Default parser
 // included ObjectParserEngine, BooleanParserEngine, NumberParserEngine, DateParserEngine, DefaultParserEngine (StringParserEngine)
 new Parser();
@@ -148,7 +148,7 @@ where the ``[selector]`` is a Jquery selector. ```[built-in transform]``` will b
 the ```transforms?: (string | TransformFunction)[]``` array
 
 ```ts
-import { Parser } from "@lanatools/html-parser"
+import { Parser } from "@mawngo/html-parser"
 
 const html = "<h1>Hello</h1> <h1>World</h1>";
 const parser = new Parser();
@@ -289,7 +289,7 @@ interface NumberSelector {
 Using schema helpers function to reduce nesting of your selector. example
 
 ```ts
-import { date, num, obj, Parser } from "@lanatools/html-parser";
+import { date, num, obj, Parser } from "@mawngo/html-parser";
 
 const parser = new Parser();
 

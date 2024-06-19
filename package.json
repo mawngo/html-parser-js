@@ -1,6 +1,6 @@
 {
-  "name": "@lanatools/html-parser",
-  "version": "1.0.1",
+  "name": "@mawngo/html-parser",
+  "version": "1.1.0",
   "description": "Parse html to json object using predefined json schema.",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lana-collections/html-parser-lib.git"
+    "url": "git+https://github.com/mawngo/html-parser-js.git"
   },
   "keywords": [
     "web",
@@ -28,12 +28,12 @@
     "html",
     "structure"
   ],
-  "author": "Lana",
+  "author": "mawngo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lana-collections/html-parser-lib/issues"
+    "url": "https://github.com/mawngo/html-parser-js/issues"
   },
-  "homepage": "https://github.com/lana-collections/html-parser-lib#readme",
+  "homepage": "https://github.com/mawngo/html-parser-js#readme",
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/node": "^16.10.2",
@@ -68,7 +68,7 @@
     }
   },
   "dependencies": {
-    "@lanatools/pipe-parser": "^1.2.0",
+    "@mawngo/pipe-parser": "^1.4.0",
     "cheerio": "^1.0.0-rc.10",
     "dayjs": "1.10.7",
     "numeral": "2.0.6"
