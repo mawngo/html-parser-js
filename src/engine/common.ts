@@ -1,6 +1,6 @@
 import { GeneralSelector, SelectorOptions, SimpleSelector, TransformFunction } from "./base.js";
 import { ValueSelector } from "./value/base.js";
-import { parse } from "@lanatools/pipe-parser";
+import { parse } from "@mawngo/pipe-parser";
 
 export function wrapArray<T>(value?: T | T[] | null): T[] {
   if (Array.isArray(value)) return value;
