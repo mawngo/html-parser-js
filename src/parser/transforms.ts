@@ -1,5 +1,8 @@
 import { isObject } from "../engine/common.js";
 
+/**
+ * Built-in {@link TransformFunction}
+ */
 export const transforms = {
   replace(val: any, match: any, replaceBy: any): any | null {
     return applyWithObjectAndArraySupport(val, (input) => {

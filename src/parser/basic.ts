@@ -6,12 +6,18 @@ import { DefaultParserEngine, DefaultSelector } from "../engine/value/string.js"
 import { CoreParser, CoreParserOptions } from "./base.js";
 import { transforms } from "./transforms.js";
 
+/**
+ * Implement of {@link NodeFactory} backed by Cheerio.
+ */
 export class CheerioNodeFactory implements NodeFactory {
   loadHtml(html: string): Node {
     return new CheerioNode(load(html).root());
   }
 }
 
+/**
+ * Implement of {@link Node} backed by Cheerio element.
+ */
 export class CheerioNode implements Node {
   public readonly el: Cheerio<CheerioNodeElement>;
 

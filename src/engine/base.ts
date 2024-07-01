@@ -1,27 +1,66 @@
+/**
+ * Common interface of html node object, represent element in the dom.
+ *
+ * Default implement backed by Cheerio.
+ */
 export interface Node {
+  /**
+   * Get the descendants of each element in the current set of matched elements,
+   * filtered by a selector, jQuery object, or element.
+   */
   find(selector: string): Node[];
 
+  /**
+   * Will select the first element of a cheerio object.
+   */
   first(selector: string): Node | null;
 
+  /**
+   * Get the parent of each element in the current set of matched elements,
+   * optionally filtered by a selector.
+   */
   parent(): Node;
 
+  /**
+   * Get the combined text contents of each element in the set of matched
+   *elements, including their descendants.
+   */
   text(): string;
 
+  /**
+   * Gets an HTML content string from the first selected element.
+   */
   innerHTML(): string;
 
+  /**
+   * Gets the HTML of the element.
+   */
   outerHTML(): string;
 
+  /**
+   * Method for getting attributes. Gets the attribute value for only the first
+   * element in the matched set.
+   */
   attr(name: string): string | null;
 
+  /**
+   * Checks the current list of elements and returns `true` if _any_ of the elements match.
+   */
   is(node: Node): boolean;
 }
 
+/**
+ * Common interface for converting html to {@link Node}
+ */
 export interface NodeFactory {
   loadHtml(html: string): Node;
 }
 
+/**
+ * Common interface for configurable objects.
+ */
 export interface Configurable<C = any> {
-  config(options: C | Partial<C>);
+  config(options: C | Partial<C>): void;
 }
 
 export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> {
@@ -74,7 +113,15 @@ function removeDuplicateNode(nodes: Node[]): Node[] {
   return uniqueNodes;
 }
 
+/**
+ * Function that transform a value into another value.
+ */
 export type TransformFunction = (value: any, ...args: any[]) => any;
+/**
+ * The most basic selector.
+ * {@code string} to select a value.
+ * {@code string[]} to select a list of value.
+ */
 export type SimpleSelector = string | string[];
 
 export interface SelectorOptions {
