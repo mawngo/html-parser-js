@@ -2,6 +2,9 @@ import { GeneralSelector, SelectorOptions, SimpleSelector, TransformFunction } f
 import { ValueSelector } from "./value/base.js";
 import { parse } from "@mawngo/pipe-parser";
 
+/**
+ * Wrap value to array if necessary
+ */
 export function wrapArray<T>(value?: T | T[] | null): T[] {
   if (Array.isArray(value)) return value;
   return value != null ? [value] : [];
@@ -20,6 +23,9 @@ export function parseSelectorString(selector: string): { selector?: string, attr
   };
 }
 
+/**
+ * Unwrap array selector into single selector
+ */
 export function unwrapSelector<T>(selector: GeneralSelector<T> | SimpleSelector): GeneralSelector<T> | ValueSelector {
   if (typeof selector === "string" || Array.isArray(selector)) {
     return {
@@ -40,6 +46,10 @@ export function extractScope<T extends SelectorOptions>(option?: SimpleSelector 
   return [(option as T).scope || "", option as T];
 }
 
+/**
+ * Create a transform list by using a list of transform-function/built-in-name
+ * and a built-in transform map.
+ */
 export function buildTransformList(
   rawTransforms: (TransformFunction | string)[],
   builtIns: { [key: string]: TransformFunction } = {}
@@ -61,6 +71,9 @@ export function buildTransformList(
   return transforms;
 }
 
+/**
+ * Check whether the value is an object (and not array)
+ */
 export function isObject(value: any | null): boolean {
   return value != null
     && typeof value === "object"

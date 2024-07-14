@@ -2,18 +2,46 @@ import { ValueParserEngine, ValueSelector } from "./base.js";
 import { SelectorOptions, SimpleSelector } from "../base.js";
 import { extractScope } from "../common.js";
 
+/**
+ * Additional options for {@link StringSelector}
+ */
 interface StringParseOptions {
+  /**
+   * Default value, for case complex type or null
+   */
   default?: string | null;
+  /**
+   * Default value when value is empty
+   */
   defaultIfEmpty?: string | null;
+  /**
+   * Match the value and return match
+   */
   match?: string | RegExp;
+  /**
+   * Default value if there is no match
+   */
   defaultIfNoMatch?: string | null;
 }
 
+/**
+ * Selector for {@link DefaultParserEngine}
+ * @see StringParseOptions
+ */
 export interface StringSelector extends ValueSelector, StringParseOptions {
+  /**
+   * Enable string parsing.
+   */
   string: true;
 }
 
+/**
+ * Selector for {@link DefaultParserEngine}, without explicit enabling string parsing.
+ */
 export interface DefaultSelector extends ValueSelector, StringParseOptions {
+  /**
+   * Enable string parsing. By default, if no other type is enabled, we use this engine anyway.
+   */
   string?: true;
 }
 
@@ -27,6 +55,9 @@ export class StringParserEngine extends ValueParserEngine<StringSelector> {
   }
 }
 
+/**
+ * A {@link ParserEngine engine} that parse {@link Node} to string
+ */
 export class DefaultParserEngine extends ValueParserEngine<DefaultSelector> {
   match(selector?: any): boolean {
     if (selector?.string === false) return false;
@@ -60,6 +91,9 @@ function matchIfRequired(value: string, options?: StringParseOptions): string | 
   return regex.exec(value)?.[0] ?? options?.defaultIfNoMatch ?? null;
 }
 
+/**
+ * Schema helper to create a {@link StringSelector} without nesting
+ */
 export function str(
   selector: SimpleSelector,
   opts?: SimpleSelector | StringParseOptions & SelectorOptions,
@@ -75,6 +109,9 @@ export function str(
   };
 }
 
+/**
+ * Schema helper to create a {@link StringSelector} with regex matching without nesting
+ */
 export function match(
   regex: string | RegExp,
   selector: SimpleSelector,

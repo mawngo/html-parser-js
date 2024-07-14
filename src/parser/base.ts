@@ -13,6 +13,9 @@ import { ObjectSelector } from "../engine/object.js";
 
 const isConfigurable = (x: any): x is Configurable => typeof x.config === "function";
 
+/**
+ * The base configuration for {@link CoreParser parsers}
+ */
 export interface CoreParserOptions<P extends GeneralSelector> {
   engines: ParserEngine<P>[];
   nodeFactory: NodeFactory;
@@ -20,6 +23,9 @@ export interface CoreParserOptions<P extends GeneralSelector> {
   arrTransforms: { [key: string]: TransformFunction };
 }
 
+/**
+ * The base class for implement parsers, contains methods for parsing html and {@link Node}
+ */
 export class CoreParser<P extends GeneralSelector> {
   protected readonly options: CoreParserOptions<P>;
 
@@ -32,21 +38,57 @@ export class CoreParser<P extends GeneralSelector> {
     }
   }
 
+  /**
+   * Parse html into array
+   */
   parseHtml<T>(html: string, selector: string[]): Promise<T>;
+  /**
+   * Parse html into array
+   */
   parseHtml<T>(html: string, selector: P & { scope: string[] }): Promise<T>;
+  /**
+   * Parse html into array
+   */
   parseHtml<T>(html: string, selector: P & { selector: string[] }): Promise<T>;
+  /**
+   * Parse into type T (object), which is specified by the schema.
+   */
   parseHtml<T>(html: string, selector: P & ObjectSelector<P>): Promise<T>;
+  /**
+   * Parse into type T, which is specified by the schema.
+   */
   parseHtml<T>(html: string, selector: P | SimpleSelector): Promise<T | null>;
+  /**
+   * Async version of parseHtml
+   */
   async parseHtml<T>(html: string, selector: P | SimpleSelector): Promise<T | null> {
     const node = this.options.nodeFactory.loadHtml(html);
     return this.parseNode<T>(node, selector);
   }
 
+  /**
+   * Parse {@link Node} into array
+   */
   parseNode<T>(node: Node, selector: string[]): Promise<T>;
+  /**
+   * Parse {@link Node} into array
+   */
   parseNode<T>(node: Node, selector: P & { scope: string[] }): Promise<T>;
+  /**
+   * Parse {@link Node} into array
+   */
   parseNode<T>(node: Node, selector: P & { selector: string[] }): Promise<T>;
+  /**
+   * Parse into type T (object), which is specified by the schema.
+   */
   parseNode<T>(node: Node, selector: P & ObjectSelector<P>): Promise<T>;
+  /**
+   * Parse into type T, which is specified by the schema.
+   */
   parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null>;
+  /**
+   * Async version of parseNode
+   */
   async parseNode<T>(node: Node, selector: P | SimpleSelector): Promise<T | null> {
     const unwrappedSelector = unwrapSelector(selector) as P;
     for (const engine of this.options.engines) {

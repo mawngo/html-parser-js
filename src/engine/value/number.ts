@@ -3,18 +3,43 @@ import { SelectorOptions, SimpleSelector } from "../base.js";
 import { extractScope } from "../common.js";
 import numeral, { Numeral } from "numeral";
 
-// Number format: http://numeraljs.com/#format
+/**
+ * Additional options for {@link NumberSelector}
+ */
 interface NumberParseOptions {
+  /**
+   * Round value to int
+   */
   int?: boolean;
+  /**
+   * Default value, for case invalid number
+   */
   default?: number | null;
+  /**
+   * If format string passed then format number to that format (as string)
+   * Number format: http://numeraljs.com/#format
+   */
   format?: "number" | string;
+  /**
+   * Mode used to round value to int
+   */
   roundMode?: "round" | "floor" | "ceil";
 }
 
+/**
+ * Selector for {@link NumberParserEngine}
+ */
 export interface NumberSelector extends ValueSelector, NumberParseOptions {
+  /**
+   * Enable number parsing.
+   */
   number: true;
 }
 
+/**
+ * A {@link ParserEngine engine} that parse {@link Node} to number
+ * @see NumberParseOptions
+ */
 export class NumberParserEngine extends ValueParserEngine<NumberSelector> {
   match(selector?: any): boolean {
     return this.isSimpleSelector(selector) && selector?.number === true;
@@ -52,6 +77,9 @@ function parseNumberFormat(number: Numeral | null, options: NumberParseOptions):
   return number.format(options.format);
 }
 
+/**
+ * Schema helper to create a {@link NumberSelector} without nesting
+ */
 export function num(
   selector: SimpleSelector,
   opts?: SimpleSelector | NumberParseOptions & SelectorOptions,
@@ -67,6 +95,9 @@ export function num(
   };
 }
 
+/**
+ * Schema helper to create a {@link NumberSelector} that round to int without nesting
+ */
 export function int(
   selector: SimpleSelector,
   opts?: SimpleSelector | NumberParseOptions & SelectorOptions,

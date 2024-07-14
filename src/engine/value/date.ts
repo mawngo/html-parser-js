@@ -6,17 +6,47 @@ import dayjs, { Dayjs } from "dayjs";
 
 dayjs.extend(customParseFormat);
 
-// Date format: https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
+/**
+ * Additional options for {@link DateSelector}
+ */
 interface DateParseOptions {
+  /*
+   * Format for parsing input string into date.
+   * Date format: https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
+   *
+   * If number passed, the engine ignore the format and parse number as timestamp
+   */
   parse?: string | string[];
+  /**
+   * Output date format
+   * - if format options is 'iso', the parser return value as iso date string (default)
+   * - if format options is 'date', the parser return value as Date object
+   * - if format options is 'timestamp', the parser return value as timestamp number
+   * - if format options is 'dayjs', the parser return value as dayjs instance
+   * - if format options is other string, the parser return formatted date string
+   * Date format: https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
+   */
   format?: "iso" | "date" | "dayjs" | "timestamp" | string;
+  /**
+   * Default value for case invalid date
+   */
   default?: string | Date | number;
 }
 
+/**
+ * Selector for {@link DateParserEngine}
+ * @see DateParseOptions
+ */
 export interface DateSelector extends ValueSelector, DateParseOptions {
+  /**
+   * Enable date parsing
+   */
   date: true;
 }
 
+/**
+ * A {@link ParserEngine engine} that parse {@link Node} to Date
+ */
 export class DateParserEngine extends ValueParserEngine<DateSelector> {
   match(selector?: any): boolean {
     return this.isSimpleSelector(selector) && selector?.date === true;
@@ -49,6 +79,9 @@ function formatDate(date: Dayjs | null, format: string): Dayjs | Date | string |
   return date.format(format);
 }
 
+/**
+ * Schema helper to create a {@link DateSelector} without nesting
+ */
 export function date(
   selector: SimpleSelector,
   opts?: SimpleSelector | DateParseOptions & SelectorOptions,

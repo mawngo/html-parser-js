@@ -68,17 +68,30 @@ export class CheerioNode implements Node {
   }
 }
 
+/**
+ * Type that {@link BasicParser} can parse to
+ */
 export type BasicSupportedType<P extends GeneralSelector = DefaultSelector> =
   | ObjectSelector<BasicSupportedType<P>>
   | DefaultSelector
   | P
 
+/**
+ * Configuration for {@link BasicParser} and {@link Parser}
+ *
+ * @see CoreParserOptions
+ */
 export interface ParserOptions<P extends GeneralSelector> extends CoreParserOptions<P> {
   objTransforms: {
     [key: string]: TransformFunction
   };
 }
 
+/**
+ * A Parser with basic parser included
+ *
+ * {@link ObjectParserEngine}, {@link BooleanParserEngine}, {@link NumberParserEngine}, {@link DateParserEngine}, {@link DefaultParserEngine} (StringParserEngine)
+ */
 export class BasicParser<P extends GeneralSelector = DefaultSelector> extends CoreParser<BasicSupportedType<P>> {
   constructor(options: Partial<ParserOptions<BasicSupportedType<P>>> = {}) {
     options.transforms = {

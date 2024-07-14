@@ -245,7 +245,7 @@ handler various input string format like "$10,000.00", "3.467TB", "76%", ...
 interface NumberSelector {
   selector: string | string[];
   number: true; // required
-  int?: boolean; // mode used to round value to int
+  int?: boolean; // round value to int
   default?: number | null; // default value
   format?: "number" | string; // if format string passed then format number to that format (as string)
   roundMode?: "round" | "floor" | "ceil"; // mode used to round value to int

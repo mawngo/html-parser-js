@@ -6,6 +6,9 @@ import { GeneralSelector } from "../engine/base.js";
 import { DateParserEngine, DateSelector } from "../engine/value/date.js";
 import { BasicParser, ParserOptions } from "./basic.js";
 
+/**
+ * Types that {@link Parser} can parse to
+ */
 export type SupportedType<P extends GeneralSelector = DefaultSelector> =
   | ObjectSelector<SupportedType<P>>
   | NumberSelector
@@ -14,6 +17,9 @@ export type SupportedType<P extends GeneralSelector = DefaultSelector> =
   | DefaultSelector
   | P
 
+/**
+ * A Parser with all built-in {@link ParserEngine engines} included
+ */
 export class Parser<P extends GeneralSelector = DefaultSelector> extends BasicParser<SupportedType<P>> {
   constructor(options: Partial<ParserOptions<SupportedType<P>>> = {}) {
     options.engines = [

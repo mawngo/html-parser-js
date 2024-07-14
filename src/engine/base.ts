@@ -58,12 +58,20 @@ export interface NodeFactory {
 
 /**
  * Common interface for configurable objects.
+ *
+ * {@link ParserEngine engines} can implement this interface for configuration
  */
 export interface Configurable<C = any> {
   config(options: C | Partial<C>): void;
 }
 
+/**
+ * The base class for implement parser engines for {@link GeneralSelector selectors}
+ */
 export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> {
+  /**
+   * Parse the node to value T
+   */
   parse<T>(node: Node | null, context: P): Promise<T | null> {
     if (node === null) return Promise.resolve(null);
 
@@ -98,8 +106,14 @@ export abstract class ParserEngine<P extends GeneralSelector = GeneralSelector> 
       .then(values => values.filter(val => val != null)) as unknown as Promise<T>;
   }
 
+  /**
+   * Parse the node to value T
+   */
   protected abstract parseNode<T>(node: Node, context: P): Promise<T | null>;
 
+  /**
+   * Check whether this engine can handle the selector
+   */
   abstract match(selector?: any): boolean;
 }
 
@@ -117,6 +131,7 @@ function removeDuplicateNode(nodes: Node[]): Node[] {
  * Function that transform a value into another value.
  */
 export type TransformFunction = (value: any, ...args: any[]) => any;
+
 /**
  * The most basic selector.
  * {@code string} to select a value.
@@ -124,13 +139,38 @@ export type TransformFunction = (value: any, ...args: any[]) => any;
  */
 export type SimpleSelector = string | string[];
 
+/**
+ * The base configuration for {@link GeneralSelector selectors}
+ */
 export interface SelectorOptions {
+  /**
+   * Scope of the selector. transform to ```$(scope).find(selector)```
+   */
   scope?: SimpleSelector;
+  /**
+   * Trim the value before process. default to ```true```
+   */
   trim?: boolean;
+  /**
+   *  List of transform to apply. transform can be a function that take
+   *  current value and return another value, or name of ```built-in transforms```. if applied when the ```selector``` is an
+   *  array (select all), the transform will be applied on each item in result list.
+   */
   transforms?: (TransformFunction | string)[];
+  /**
+   * List of arrTransform to apply. arrTransform only apply if the
+   * selector is array (select all) .arrTransform can be a function that take current value and return another value, or
+   * name of ```built-in transforms```
+   */
   arrTransforms?: (TransformFunction | string)[];
 }
 
+/**
+ * The base interface for implementing selectors for {@link ParserEngine engines}
+ */
 export interface GeneralSelector<T = any> extends SelectorOptions {
+  /**
+   * The actual selector, for selecting content to be parsed by engine
+   */
   selector: T,
 }

@@ -13,10 +13,34 @@ type ObjectSelectorMap<S extends GeneralSelector> = {
   [key: string]: SimpleSelector | S | ObjectSelector<S>
 }
 
+/**
+ * Selector for {@link ObjectParserEngine}
+ */
 export interface ObjectSelector<S extends GeneralSelector> extends GeneralSelector<ObjectSelectorMap<S>> {
+  /**
+   *  List of transform to apply. transform can be a function that take
+   *  current value and return another value, or name of ```built-in transforms```
+   *
+   *  transforms will be applied on all object's fields, and run after fields transform
+   */
+  transforms?: (TransformFunction | string)[];
+  /**
+   * The selector for engine to select value.
+   * For {@link ObjectParserEngine object parser} we support {@link ObjectSelectorMap map selector}
+   */
   selector: ObjectSelectorMap<S>;
+  /**
+   * Apply transform to the object result
+   */
   objTransforms?: (TransformFunction | string)[];
+  /**
+   * Enable object parsing. Set to ```false``` to disable, only when you want to implement your own ObjectParserEngine
+   * By default, this will always true when the selector is {@link ObjectSelectorMap}
+   */
   object?: boolean;
+  /**
+   * Flatten the object, merge its keys with its parent keys
+   */
   flat?: boolean;
 }
 
@@ -27,7 +51,10 @@ interface ObjectParserEngineOptions<P extends GeneralSelector> {
   };
 }
 
-// Parse object values
+/**
+ * A {@link ParserEngine engine} that parse {@link Node} to objects
+ * Include this engine make parsing to complex schema possible
+ */
 export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<ObjectSelector<P>> implements Configurable<ObjectParserEngineOptions<P>> {
   private options: ObjectParserEngineOptions<P> = { engines: [], objTransforms: {} };
 
@@ -96,6 +123,9 @@ export class ObjectParserEngine<P extends GeneralSelector> extends ParserEngine<
   }
 }
 
+/**
+ * Schema helper to create a {@link ObjectSelector} without nesting
+ */
 export function obj<S extends GeneralSelector>(
   selector: ObjectSelectorMap<S>,
   opts?: SimpleSelector | SelectorOptions
@@ -108,6 +138,9 @@ export function obj<S extends GeneralSelector>(
   };
 }
 
+/**
+ * Schema helper to create a {@link ObjectSelector} with ```{flat: true}``` without nesting
+ */
 export function flat<S extends GeneralSelector>(
   selector: ObjectSelectorMap<S>,
   opts?: SimpleSelector | SelectorOptions

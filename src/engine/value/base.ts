@@ -1,7 +1,14 @@
 import { Configurable, GeneralSelector, Node, ParserEngine, SimpleSelector, TransformFunction } from "../base.js";
 import { buildTransformList, parseSelectorString } from "../common.js";
 
+/**
+ * Selector for {@link ValueParserEngine}
+ */
 export interface ValueSelector extends GeneralSelector<SimpleSelector> {
+  /**
+   * The selector for engine to select value.
+   * For all {@link ValueParserEngine value parser} implementation, we support {@link SimpleSelector}
+   */
   selector: SimpleSelector;
 }
 
@@ -14,6 +21,9 @@ interface ValueParserEngineConfig {
   };
 }
 
+/**
+ * Base {@link ParserEngine engine} that parse {@link Node} to value
+ */
 export abstract class ValueParserEngine<P extends ValueSelector> extends ParserEngine<P> implements Configurable<ValueParserEngineConfig> {
   protected options: ValueParserEngineConfig = { transforms: {}, arrTransforms: {} };
 

@@ -2,16 +2,43 @@ import { ValueParserEngine, ValueSelector } from "./base.js";
 import { extractScope, wrapArray } from "../common.js";
 import { SelectorOptions, SimpleSelector } from "../base.js";
 
+/**
+ * Additional options for {@link BooleanSelector}
+ */
 interface BooleanParseOptions {
+  /**
+   * List of value to parse as true
+   * - if number passed the parser parse 0 as false, others as true
+   * - if falsy, and truthy not provided, the parser parse non-empty string as true, empty string as false
+   * - if only falsy provided, the parser parse falsy string as false, otherwise true
+   * - if only truthy provided, the parser parse truthy string as true, otherwise false
+   * - if both passed, the parser parse truthy string as true, falsy string as false, otherwise default value
+   */
   truthy?: string | string[];
+  /**
+   * List of value to parse as false
+   */
   falsy?: string | string[];
+  /**
+   * Default value for case complex type or null passed
+   */
   default?: boolean | null;
 }
 
+/**
+ * Selector for {@link BooleanParserEngine}
+ * @see BooleanParseOptions
+ */
 export interface BooleanSelector extends ValueSelector, BooleanParseOptions {
+  /**
+   * Enable boolean parsing
+   */
   boolean: true;
 }
 
+/**
+ * A {@link ParserEngine engine} that parse {@link Node} to boolean
+ */
 export class BooleanParserEngine extends ValueParserEngine<BooleanSelector> {
   match(selector: any): boolean {
     return this.isSimpleSelector(selector) && selector?.boolean === true;
@@ -47,6 +74,9 @@ export function parseBoolean(value: any, options: BooleanParseOptions = {}): boo
   return def;
 }
 
+/**
+ * Schema helper to create a {@link BooleanSelector} without nesting
+ */
 export function bool(
   selector: SimpleSelector,
   opts?: SimpleSelector | BooleanParseOptions & SelectorOptions,
